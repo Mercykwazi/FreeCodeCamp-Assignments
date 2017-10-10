@@ -1,0 +1,54 @@
+body {
+background:url("https://mercykwazi.github.io/coddepen/motivation.jpg") center no-repeat;
+
+}
+#random-main {
+  text-align: center;
+  opacity: 1;
+  color: #000000;
+  font-weight: 500;
+}
+
+#random-main h1 {
+  font-family: Pacifico !important;
+  text-shadow: 0 0 18px #FFFFFF;
+}
+
+.random-header {
+  padding: 2.5%;
+  margin-top: 5%;
+  radius: 5px;
+  background-color: rgba(255, 255, 255, .9);
+  margin-bottom: 3%;
+  -webkit-box-shadow: 4px 5px 15px 2px #828282;
+  box-shadow: 4px 5px 15px 2px #828282;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.random-header span {
+  font-size: 20px;
+}
+
+#quoteDesplay {
+  font-size:25px;
+  -webkit-box-shadow: 4px 5px 15px 2px;
+  box-shadow: 4px 5px 15px 2px 
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  height: 100px;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  background-color: white;
+
+
+#quoteDesplay p {
+   font-size: 15px;
+  padding: 2% 1% 0 1%;
+  font-family: Pacifico !important;
+}
+}
+
+#quoteDesplay span {
+  font-family: 'PT Serif', serif;
+}
