@@ -1,0 +1,19 @@
+body {
+	margin: 3%;
+	background-color: black;
+}
+	
+#search {
+	width:100%;
+	color:white;
+}
+	
+	
+.footer {
+  margin: 15% auto;
+ color:#fed136; 
+width:100%;
+  font-size:1.2em;
+  font-family: "Times New Roman", Serif;
+  
+}    
