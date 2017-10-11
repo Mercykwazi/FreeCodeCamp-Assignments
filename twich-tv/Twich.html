@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Twitch</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function search() {
+            $(document).ready(function () {
+                var stream = document.getElementById("user").value;
+
+                var results = "";
+
+                $.ajax({
+                    type: 'GET',
+                    url: ' https://wind-bow.gomix.me/twitch-api/streams/' + stream +'?callback=?',
+                    dataType: 'jsonp',
+                    success: function (data) {
+
+                        if (data.stream === null) {
+                            results = "offline";
+                         
+                            $("#show").html(`${stream} is ${results}`);
+
+                        }
+                        else {
+                            results = "online";
+                            $("#show").html(`${stream} is ${results}  <br/>streaming:${data.stream.game}`);
+
+                        }
+                        console.log(data);
+
+                        return results;
+                    }
+
+                });
+                })
+        }
+                
+           
+    </script>
+
+    <body>
+        <div id="show"></div>
+        <div class="input-group">
+            <input onclick="search()" type="text" class="form-group mx-sm-3" placeholder="user" id="user"/>
+            <span class="input-group-btn">
+					<button onclick="search()" type="submit" class="btn btn-default" id="submitBtn">search</button>
+				  </span>
+        </div>
