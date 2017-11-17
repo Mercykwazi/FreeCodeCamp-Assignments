@@ -1,0 +1,3 @@
+function dropElements(arr, func) {
+    
+}
