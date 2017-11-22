@@ -1,0 +1,3 @@
+function truthCheck(collection, pre) {
+    
+}
