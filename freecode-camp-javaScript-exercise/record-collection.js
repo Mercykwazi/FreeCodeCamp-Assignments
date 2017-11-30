@@ -34,8 +34,11 @@ function updateRecords(id, prop, value) {
     } else if (value !== "") {
         collection[id][prop] = value;
     }
-        return collection;
-
-
+    else {
+        delete collection[id][prop];
     }
-    console.log(updateRecords(5439, "artist", "ABBA"))
+    return collection;
+
+
+}
+console.log(updateRecords(5439, "artist", "ABBA"))
