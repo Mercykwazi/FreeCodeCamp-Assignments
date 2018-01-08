@@ -1,5 +1,5 @@
 function updateInventory(arr1, arr2) {
-    return arr1;
+    return ar;
 }
 
 
