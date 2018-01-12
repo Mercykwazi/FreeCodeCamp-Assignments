@@ -6,14 +6,14 @@ function permAlone(str) {
     }
     test.forEach(function (element) {
         for (var x = 0; x < element.length; x++) {
-        var pi = element[x] + element.replace(element.charAt(x), "");
+        var permit = element[x] + element.replace(element.charAt(x), "");
         test.push(pi);
         }
     });
     test.forEach(function (character) {
         for (var t = 0; t < character.length; t++) {
-        var pi = character[t] + character.replace(character.charAt(t), "");
-        test.push(pi);
+        var permit = character[t] + character.replace(character.charAt(t), "");
+        test.push(permit);
         }
     });
 return remove(test).length;
