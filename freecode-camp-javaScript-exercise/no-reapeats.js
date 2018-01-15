@@ -23,4 +23,4 @@ function premAlone(n, str, arr) {
         console.log(temp);
     }
 }
-console.log(premAlone(2, "abc", ["b, c, d"]));
+console.log(premAlone(2, "abc", "xyz"));
