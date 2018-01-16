@@ -1,26 +1,73 @@
-
-var temp = "";
-function premAlone(n, str, arr) {
+var temp;
+function generate(n, a) {
+    var c = [];
+    temp = a;
     for (var i = 0; i < n; i++) {
+        c[i] = 0;
+        console.log(a);
     }
-    console.log(str);
-    while (i = 0, i < n, i++) {
-        if (arr[i] < i) {
+    i = 0;
+    while (i < n) {
+        if (c[i] < i) {
+
             if (i % 2 === 0) {
-                var spited = str;
-                spited.splice(i, 1, temp[n - 1])
-                spited.splice(n - 1, 1, temp[i]);
-                temp = spited.join("");
+                var split = temp.split('');
+                split.splice(temp[0], 1, temp[i]);
+                split.splice(temp[i], 1, temp[0]);
+                temp = split.join('');
             } else {
-                var spited = str.split("");
-                spited.splice(str[arr[i]], 1, str[i])
-                console.log(spited);
-                spited.splice(0, 1, temp[n - 1]);
-                spited.splice(n - 1, 1, temp[0]);
-                temp = spited.join("");
+                var split = temp.split('');
+                split.splice(temp[c[i]], temp[i]);
+                split.splice();
+                temp = split.join('');
             }
+
+            c[i] += 1;
+            i = 0;
+        } else {
+            c[i] = 0;
+            i += 1;
         }
-        console.log(temp);
     }
+    return c;
 }
-console.log(premAlone(2, "abc", "xyz"));
+
+
+console.log(generate(4, "ABCD"));
+/*
+var temp;
+function generate(n, a) {
+    var c= [];
+    temp = a;
+    for (var i = 0; i < n; i++) {
+        c[i] = 0;
+        console.log(a);
+    }
+    i = 0;
+    while (i < n) {
+        if (c[i] < i) {
+        
+        if (i % 2 === 0) {
+            var split = temp.split('');
+            split.splice(temp[0], 1, temp[i]);
+            split.splice(temp[i], 1, temp[0]);
+            temp = split.join('');
+        } else {
+            var split = temp.split('');
+            split.splice(temp[c[i]], temp[i]);
+            split.splice();
+            temp = split.join('');
+        }
+         
+            c[i] += 1;
+            i = 0;
+        } else {
+            c[i] = 0;
+            i += 1;
+        }
+    }
+    return c;
+    }
+
+
+console.log(generate(4,"ABCD")); */
