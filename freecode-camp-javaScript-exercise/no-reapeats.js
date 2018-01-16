@@ -1,4 +1,4 @@
-unction permAlone(a, n = a.length) {
+function permAlone(a, n = a.length) {
  
     var results = [];
     var c = [];
