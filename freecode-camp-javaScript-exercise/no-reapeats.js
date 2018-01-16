@@ -1,27 +1,32 @@
-var temp;
-function generate(n, a) {
+unction permAlone(a, n = a.length) {
+ 
+    var results = [];
     var c = [];
-    temp = a;
+
     for (var i = 0; i < n; i++) {
         c[i] = 0;
-        console.log(a);
     }
-    i = 0;
+    results.push(a);
+     i = 0;
     while (i < n) {
         if (c[i] < i) {
-
             if (i % 2 === 0) {
-                var split = temp.split('');
-                split.splice(temp[0], 1, temp[i]);
-                split.splice(temp[i], 1, temp[0]);
-                temp = split.join('');
+                var splitted = a.split('');
+                var temp0 = splitted[0];
+                var tempi = splitted[i];
+                splitted[0] = tempi;
+                splitted[i] = temp0;
+                a = splitted.join('');
+
             } else {
-                var split = temp.split('');
-                split.splice(temp[c[i]], temp[i]);
-                split.splice();
-                temp = split.join('');
+                var splitt = a.split('');
+                var temp1 = splitt[c[i]];
+                var tempx = splitt[i];
+                splitt[c[i]] = tempx;
+                splitt[i] = temp1;
+                a = splitt.join('');
             }
-
+            results.push(a);
             c[i] += 1;
             i = 0;
         } else {
@@ -29,45 +34,11 @@ function generate(n, a) {
             i += 1;
         }
     }
-    return c;
+        var permutation = results.filter(function(letters){
+     return !letters.match(/(.)\1+/g);
+  });
+                                       
+                                        
+return permutation.length;
 }
-
-
-console.log(generate(4, "ABCD"));
-/*
-var temp;
-function generate(n, a) {
-    var c= [];
-    temp = a;
-    for (var i = 0; i < n; i++) {
-        c[i] = 0;
-        console.log(a);
-    }
-    i = 0;
-    while (i < n) {
-        if (c[i] < i) {
-        
-        if (i % 2 === 0) {
-            var split = temp.split('');
-            split.splice(temp[0], 1, temp[i]);
-            split.splice(temp[i], 1, temp[0]);
-            temp = split.join('');
-        } else {
-            var split = temp.split('');
-            split.splice(temp[c[i]], temp[i]);
-            split.splice();
-            temp = split.join('');
-        }
-         
-            c[i] += 1;
-            i = 0;
-        } else {
-            c[i] = 0;
-            i += 1;
-        }
-    }
-    return c;
-    }
-
-
-console.log(generate(4,"ABCD")); */
+permAlone('abcd');
