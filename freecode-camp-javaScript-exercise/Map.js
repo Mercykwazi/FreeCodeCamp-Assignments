@@ -6,8 +6,8 @@ function orbitalPeriod(arr) {
     var a = 0;
     for (var i = 0; i < arr.length; i++) {
         a = earthRadius + arr[i].avgAlt;
-        var total = Math.pow(a, 3) / GM;
-        var squared = Math.sqrt(total);
+        var cubed = Math.pow(a, 3) / GM;
+        var squared = Math.sqrt(cubed);
         var finalAnswer = Math.round(Pi * squared);
         newArray.push([{ name: arr[i].name, orbitalPeriod: finalAnswer }]);
     }
