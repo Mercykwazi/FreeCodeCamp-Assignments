@@ -8,7 +8,7 @@ function pairwise(arr, arg) {
             if (arr[i] + arr[x] === arg) {
                 counter += i;
                 counter += x;
-                counter[i] = counter[x] = NaN;
+                arr[i] = arr[x] = NaN;
 
             }
 
@@ -21,3 +21,4 @@ function pairwise(arr, arg) {
 }
 
 console.log(pairwise([1, 3, 2, 4], 4))
+console.log(pairwise([], 100))
