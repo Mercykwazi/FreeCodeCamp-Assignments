@@ -9,7 +9,7 @@ function orbitalPeriod(arr) {
         var cubed = Math.pow(a, 3) / GM;
         var squared = Math.sqrt(cubed);
         var finalAnswer = Math.round(Pi * squared);
-        newArray.push([{ name: arr[i].name, orbitalPeriod: finalAnswer }]);
+        newArray.push({ name: arr[i].name, orbitalPeriod: finalAnswer });
     }
 
 
