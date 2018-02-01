@@ -1,0 +1,27 @@
+body{
+
+}
+h1{
+  color:red;
+}
+button {
+  font-size: 26px;
+  border: none;
+  color: white;
+  background: grey;
+  padding: 10px 20px;
+  transition: all 0.3s;
+  outline: none;
+}
+
+.boxed {
+width: 300px;
+    border: 15px solid ;
+    padding: 25px;
+    margin: 25px;;
+
+} 
+#timer{
+  font-size:35px
+   
+}
