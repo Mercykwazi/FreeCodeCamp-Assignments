@@ -12,21 +12,20 @@
         function startGame() {
             var randomColor = Math.floor(Math.random() * 4);
             game.gameInProgress.push(game.possibleColors[randomColor]);
-            document.getElementById(game.gameInProgress[randomColor]).style.background =
-                game.gameInProgress[randomColor];
+            document.getElementById(game.gameInProgress[randomColor]).style.background = game.gameInProgress[randomColor];
             setTimeout(function () {
-                document.getElementById(game.gameInProgress[randomColor]).style.background =
-                    game.color[randomColor];
+                document.getElementById(game.gameInProgress[randomColor]).style.background = game.color[randomColor];
             }, 2000)
 
             game.count += 1;
-            console.log("this is the value of count",count)
+            console.log("this is the value of count", count)
+            player();
             document.getElementById("countspace").innerHTML = game.count
         }
 
         function green() {
             game.player.push("green");
-            document.getElementById("green").style.background = color;
+            document.getElementById("green").style.background = game.color;
             setTimeout(function () {
                 document.getElementById("green").style.background = 'none';
             }, 1000);
@@ -34,18 +33,18 @@
         }
 
         function blue() {
-           game.player.push("blue");
-            document.getElementById("blue").style.background = 'color'
+            game.player.push("blue");
+            document.getElementById("blue").style.background = game.color
 
             setTimeout(function () {
-                document.getElementById("blue").style.background = 'none';
+                document.getElementById("blue").style.background = game.color;
             }, 1000);
             player("blue");
         }
 
         function brown() {
-           game. player.push("brown");
-            document.getElementById("brown").style.background = 'color';
+            game.player.push("brown");
+            document.getElementById("brown").style.background = game.color;
             setTimeout(function () {
                 document.getElementById("brown").style.background = 'none';
             }, 1000);
@@ -53,8 +52,8 @@
         }
 
         function purple() {
-           game.player.push("purple");
-            document.getElementById("purple").style.background = 'color';
+            game.player.push("purple");
+            document.getElementById("purple").style.background = game.color;
 
             setTimeout(function () {
                 document.getElementById("purple").style.background = 'none';
@@ -62,16 +61,17 @@
             player("purple");
         }
 
-        function player(id) {
-            game.player.push(id);
+        function player() {
             if (game.gameInProgress.length !== game.player.length) {
                 if (game.gameInProgress.toString() !== game.player.toString()) {
                     alert("You were wrong");
-                } else {
                     startGame();
+                } else {
+
                     game.player = [];
                 }
             }
+
         }
     </script>
     <style>
@@ -209,7 +209,7 @@
     <div id="countspace"></div>
     </div>
     <!-- <div class="start"> -->
-    <button onclick=" player(id) ">Start</button>
+    <button onclick="startGame()">Start</button>
     <div id="startbtn"></div>
     </div>
     <!-- <p  class="strict" >Strict</p> -->
