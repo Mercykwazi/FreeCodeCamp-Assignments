@@ -5,22 +5,25 @@
             color: ["#FF0000"],
             possibleColors: ["Purple", "blue", "green", "brown"],
             //currentGame
+            currentGame: [],
             gameInProgress: [],
             player: [],
         };
 
         function startGame() {
             var randomColor = Math.floor(Math.random() * 4);
-            game.gameInProgress.push(game.possibleColors[randomColor]);
-            document.getElementById(game.gameInProgress[randomColor]).style.background = game.gameInProgress[randomColor];
+            game.currentGame.push(game.possibleColors[randomColor]);
+            document.getElementById(game.currentGame[randomColor]).style.background =
+                game.currentGame[randomColor];
             setTimeout(function () {
-                document.getElementById(game.gameInProgress[randomColor]).style.background = game.color[randomColor];
+                document.getElementById(game.currentGame[randomColor]).style.background =
+                    game.color[randomColor];
             }, 2000)
 
             game.count += 1;
-            console.log("this is the value of count", count)
-            player();
             document.getElementById("countspace").innerHTML = game.count
+            player();
+
         }
 
         function green() {
@@ -65,13 +68,13 @@
             if (game.gameInProgress.length !== game.player.length) {
                 if (game.gameInProgress.toString() !== game.player.toString()) {
                     alert("You were wrong");
-                    startGame();
+
                 } else {
 
                     game.player = [];
                 }
             }
-
+            startGame();
         }
     </script>
     <style>
