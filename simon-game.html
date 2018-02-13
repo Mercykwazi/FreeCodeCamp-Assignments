@@ -2,21 +2,19 @@
     <script>
         var game = {
             count: 0,
-            color: ["#FF0000"],
+            color: ["#ff0000 "],
             possibleColors: ["Purple", "blue", "green", "brown"],
-            //currentGame
-            currentGame: [],
+
             gameInProgress: [],
             player: [],
         };
 
         function startGame() {
             var randomColor = Math.floor(Math.random() * 4);
-            game.currentGame.push(game.possibleColors[randomColor]);
-            document.getElementById(game.currentGame[randomColor]).style.background =
-                game.currentGame[randomColor];
+            game.gameInProgress.push(game.possibleColors[randomColor]);
+            document.getElementById(game.gameInProgress[randomColor]).style.background = game.gameInProgress[randomColor];
             setTimeout(function () {
-                document.getElementById(game.currentGame[randomColor]).style.background =
+                document.getElementById(game.gameInProgress[randomColor]).style.background =
                     game.color[randomColor];
             }, 2000)
 
@@ -70,11 +68,11 @@
                     alert("You were wrong");
 
                 } else {
-
+                   // startGame();
                     game.player = [];
                 }
             }
-            startGame();
+
         }
     </script>
     <style>
@@ -96,7 +94,7 @@
         }
 
         #purple:active {
-            background-color: red;
+            background-color: purple;
         }
 
         #blue {
@@ -107,7 +105,7 @@
         }
 
         #blue:active {
-            background-color: red;
+            background-color:blue;
         }
 
         #green {
@@ -118,7 +116,7 @@
         }
 
         #green:active {
-            background-color: red;
+            background-color:green;
         }
 
         #brown {
@@ -143,22 +141,6 @@
             margin-bottom: 2px;
         }
 
-        .count,
-        .start,
-        .strict {
-            background: red;
-            margin-right: 12px;
-            text-align: center;
-        }
-
-        .count,
-        .start,
-        .strict p {
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
         #countspace {
             height: 32px;
             width: 32px;
@@ -170,17 +152,13 @@
             justify-content: center;
             font-size: 16px;
         }
-        /*#startbtn {
-            height: 32px;
-            width: 32px;
+        #startbtn {
+           
+            width: 112px;
             background-color: orangered;
-            border: 2px solid #333;
-            border-radius: 50%;
-            -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-            -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-            box-shadow: rgba(0, 0, 0, 0.6) 1px 1px 4px;
+           
         } 
-         #strictbtn {
+        /* #strictbtn {
             height: 32px;
             width: 32px;
             background-color: lightgoldenrodyellow;
@@ -212,7 +190,7 @@
     <div id="countspace"></div>
     </div>
     <!-- <div class="start"> -->
-    <button onclick="startGame()">Start</button>
+    <button id="startbtn" onclick="startGame()">Start</button>
     <div id="startbtn"></div>
     </div>
     <!-- <p  class="strict" >Strict</p> -->
