@@ -6,6 +6,7 @@
             possibleColors: ["purple", "blue", "green", "brown"],
             gameInProgress: [],
             player: [],
+            strict: "Off",
         };
 
         function startGame() {
@@ -30,7 +31,18 @@
 
 
         }
+        function strictMode() {
+            if (game.strict === "Off") {
+                game.strict = "On"
+                document.getElementById("strictbtn").innerHTML = "Strict On"
+                document.getElementById("strictbtn").style.background = "green";
+            } else {
+                game.strict = "Off"
+                document.getElementById("strictbtn").innerHTML = "Strict Off"
+                document.getElementById("strictbtn").style.background = "white";
+            }
 
+        }
 
 
 
@@ -172,8 +184,9 @@
     <button id="startbtn" onclick="startGame()">Start</button>
     <div id="startbtn"></div>
     </div>
+    <br>
     <!-- <p  class="strict" >Strict</p> -->
-    <div id="strictbtn"></div>
+    <button onclick="strictMode()" id="strictbtn">strict-off</button>
     </div>
     </div>
 
