@@ -2,77 +2,70 @@
     <script>
         var game = {
             count: 0,
-            color: ["#ff0000 "],
-            possibleColors: ["Purple", "blue", "green", "brown"],
-
+            color: ["white"],
+            possibleColors: ["purple", "blue", "green", "brown"],
             gameInProgress: [],
             player: [],
         };
 
         function startGame() {
-            var randomColor = Math.floor(Math.random() * 4);
+            var randomColor = Math.floor(Math.random() * game.possibleColors.length);
             game.gameInProgress.push(game.possibleColors[randomColor]);
-            document.getElementById(game.gameInProgress[randomColor]).style.background = game.gameInProgress[randomColor];
-            setTimeout(function () {
-                document.getElementById(game.gameInProgress[randomColor]).style.background =
-                    game.color[randomColor];
-            }, 2000)
-
+            console.log("the value of gameInprogress:", game.gameInProgress)
             game.count += 1;
             document.getElementById("countspace").innerHTML = game.count
-            player();
+            var i = 0;
+            var change = setInterval(function () {
+                console.log(game.gameInProgress[i])
+                document.getElementById(game.gameInProgress[i]).style.background = game.gameInProgress[i];
+                setTimeout(function () {
+                    document.getElementById(game.gameInProgress[i - 1]).style.background = game.color[0];
+                }, 500);
+                i++;
+                if (i == game.gameInProgress.length) {
+                    clearInterval(change)
+                }
+            }, 1000);
+
+
 
         }
 
+
+
+
         function green() {
             game.player.push("green");
-            document.getElementById("green").style.background = game.color;
-            setTimeout(function () {
-                document.getElementById("green").style.background = 'none';
-            }, 1000);
-            player("green");
+
+            player();
         }
 
         function blue() {
             game.player.push("blue");
-            document.getElementById("blue").style.background = game.color
 
-            setTimeout(function () {
-                document.getElementById("blue").style.background = game.color;
-            }, 1000);
-            player("blue");
+            player();
         }
 
         function brown() {
-            game.player.push("brown");
-            document.getElementById("brown").style.background = game.color;
-            setTimeout(function () {
-                document.getElementById("brown").style.background = 'none';
-            }, 1000);
-            player("brown");
+
+            player();
         }
 
         function purple() {
             game.player.push("purple");
-            document.getElementById("purple").style.background = game.color;
-
-            setTimeout(function () {
-                document.getElementById("purple").style.background = 'none';
-            }, 1000);
-            player("purple");
+            player();
         }
 
         function player() {
-            if (game.gameInProgress.length !== game.player.length) {
+            if (game.gameInProgress.length === game.player.length) {
                 if (game.gameInProgress.toString() !== game.player.toString()) {
                     alert("You were wrong");
 
                 } else {
-                   // startGame();
+                    startGame();
                     game.player = [];
                 }
             }
-
         }
     </script>
     <style>
@@ -82,52 +75,48 @@
             width: 200px;
         }
 
-        .act {
-            background-color: red !important;
-        }
-
         #purple {
 
             border-top-left-radius: 300px;
-            background-color: purple;
+            background-color: white;
             clear: left;
         }
 
         #purple:active {
-            background-color: purple;
+            background-color: pink;
         }
 
         #blue {
 
             border-bottom-left-radius: 300px;
-            background-color: blue;
+            background-color: white;
             clear: left;
         }
 
         #blue:active {
-            background-color:blue;
+            background-color: white;
         }
 
         #green {
 
             border-bottom-right-radius: 300px;
-            background-color: green;
+            background-color: white;
             clear: right;
         }
 
         #green:active {
-            background-color:green;
+            background-color: lightgreen;
         }
 
         #brown {
 
             border-top-right-radius: 300px;
-            background-color: brown;
+            background-color: white;
             clear: right;
         }
 
         #brown:active {
-            background-color: red;
+            background-color: black;
         }
 
         .center {
@@ -152,22 +141,12 @@
             justify-content: center;
             font-size: 16px;
         }
+
         #startbtn {
-           
+
             width: 112px;
             background-color: orangered;
-           
-        } 
-        /* #strictbtn {
-            height: 32px;
-            width: 32px;
-            background-color: lightgoldenrodyellow;
-            border: 2px solid #333;
-            border-radius: 50%;
-            -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-            -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-            box-shadow: rgba(0, 0, 0, 0.6) 1px 1px 4px;
-        } */
+        }
     </style>
 </head>
 
