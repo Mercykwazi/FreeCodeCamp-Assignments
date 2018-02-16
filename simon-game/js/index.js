@@ -1,76 +1,96 @@
-  var game = {
-            count: 0,
-            color: ["white"],
-            possibleColors: ["red", "blue", "green", "yellow"],
-            gameInProgress: [],
-            player: [],
-            strict: "Off",
-        };
+var game = {
+    count: 0,
+    color: ["white"],
+    possibleColors: ["red", "blue", "green", "yellow"],
+    gameInProgress: [],
+    player: [],
+    sound: {
+        red: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
+        blue: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
+        green: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
+        yellow: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3')
+    },
+    strict: "Off",
+};
 
-        function addColor() {
+function addColor() {
 
-            var randomColor = Math.floor(Math.random() * game.possibleColors.length);
-            game.gameInProgress.push(game.possibleColors[randomColor]);
-            console.log("the value of gameInprogress:", game.gameInProgress)
-
-            document.getElementById("countspace").innerHTML = game.gameInProgress.length;
-            var i = 0;
-            var change = setInterval(function () {
-                console.log(game.gameInProgress[i])
-                document.getElementById(game.gameInProgress[i]).style.background = game.gameInProgress[i];
-                setTimeout(function () {
-                    document.getElementById(game.gameInProgress[i - 1]).style.background = game.color[0];
-                }, 500);
-                i++;
-                if (i == game.gameInProgress.length) {
-                    clearInterval(change)
-                }
-            }, 1000);
-
-
-
+    var randomColor = Math.floor(Math.random() * game.possibleColors.length);
+    game.gameInProgress.push(game.possibleColors[randomColor]);
+    console.log("the value of gameInprogress:", game.gameInProgress);
+    flush();
+}
+function flush() {
+    document.getElementById("countspace").innerHTML = game.gameInProgress.length;
+    var i = 0;
+    var change = setInterval(function () {
+        console.log(game.gameInProgress[i])
+        document.getElementById(game.gameInProgress[i]).style.background = game.gameInProgress[i];
+        setTimeout(function () {
+            document.getElementById(game.gameInProgress[i - 1]).style.background = game.color[0];
+        }, 500);
+        i++;
+        if (i == game.gameInProgress.length) {
+            clearInterval(change)
         }
-        function strictMode() {
-            if (game.strict === "Off") {
-                game.strict = "On"
-                document.getElementById("strictbtn").innerHTML = "Strict On"
-                document.getElementById("strictbtn").style.background = "green";
-            } else {
-                game.strict = "Off"
-                document.getElementById("strictbtn").innerHTML = "Strict Off"
-                document.getElementById("strictbtn").style.background = "white";
-            }
+    }, 1000);
+}
+function strictMode() {
 
-        }
+    if (game.strict === "Off") {
 
-        function player(color) {
+        game.strict = "On"
+        strictly();
+        document.getElementById("strictbtn").innerHTML = "Strict On"
+        document.getElementById("strictbtn").style.background = "green";
+    } else {
+        game.strict = "Off"
+        document.getElementById("strictbtn").innerHTML = "Strict Off"
+        document.getElementById("strictbtn").style.background = "white";
+    }
 
-            game.player.push(color);
+}
 
-            if (game.gameInProgress.length === game.player.length) {
-                if (game.gameInProgress.toString() !== game.player.toString()) {
-                    alert("Sorry! wrong moves,you loose");
-                    restart();
-                } else {
-                    addColor();
-                    game.player = [];
-                }
-            }
-        }
-        function reset() {
-            window.location.reload(true);
-        };
+function player(color) {
+    if (color === "red") {
+        game.sound.red
+    }
 
-        function startGame() {
-            if (game.gameInProgress.length > 0) {
-                alert('sorry, game already in progress');
-            } else {
-                addColor();
-            }
-        }
-        function restart() {
-            game.gameInProgress = [];
+    game.player.push(color);
+
+    if (game.gameInProgress.length === game.player.length) {
+        if (game.gameInProgress.toString() !== game.player.toString()) {
+            alert('Wrong moves,please do try again')
+            clear();
+            // flush();
+
+        } else {
+            addColor();
             game.player = [];
-            startGame();
-
         }
+    }
+}
+function clear() {
+    game.player = [];
+}
+function strictly() {
+    game.gameInProgress = [];
+    game.player = [];
+    startGame();
+
+}
+
+
+function startGame() {
+    if (game.gameInProgress.length > 0) {
+        alert('sorry, game already in progress');
+    } else {
+        addColor();
+    }
+}
+function restart() {
+    game.gameInProgress = [];
+    game.player = [];
+    startGame();
+
+}
