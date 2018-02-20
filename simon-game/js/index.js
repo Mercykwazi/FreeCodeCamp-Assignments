@@ -36,14 +36,12 @@ function flush() {
     }, 1000);
 }
 function strictMode() {
-
     if (game.strict === "Off") {
-
-        game.strict = "On"
-        strictly();
         document.getElementById("strictbtn").innerHTML = "Strict On"
         document.getElementById("strictbtn").style.background = "green";
     } else {
+
+        console.log("player:", player("color"))
         game.strict = "Off"
         document.getElementById("strictbtn").innerHTML = "Strict Off"
         document.getElementById("strictbtn").style.background = "white";
@@ -60,23 +58,35 @@ function player(color) {
 
     if (game.gameInProgress.length === game.player.length) {
         if (game.gameInProgress.toString() !== game.player.toString()) {
+            console.log("Is this being run:", strictly())
             alert('Wrong moves,please do try again')
             clear();
-            // flush();
-
+            flush();
         } else {
             addColor();
-            game.player = [];
+            clear();
+
         }
     }
+
 }
 function clear() {
     game.player = [];
 }
 function strictly() {
-    game.gameInProgress = [];
-    game.player = [];
-    startGame();
+    if (game.gameInProgress.length === game.player.length) {
+        if (game.gameInProgress.toString() !== game.player.toString()) {
+            if (game.strict === "off") {
+                alert('you were wrong,you loose')
+                clear();
+                game.gameInProgress = [];
+            }
+
+        } else {
+            addColor();
+            clear();
+        }
+    }
 
 }
 
