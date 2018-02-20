@@ -10,7 +10,7 @@ var game = {
         green: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
         yellow: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3')
     },
-    strict: "Off",
+    strict: false,
 };
 
 function addColor() {
@@ -40,8 +40,6 @@ function strictMode() {
         document.getElementById("strictbtn").innerHTML = "Strict On"
         document.getElementById("strictbtn").style.background = "green";
     } else {
-
-        console.log("player:", player("color"))
         game.strict = "Off"
         document.getElementById("strictbtn").innerHTML = "Strict Off"
         document.getElementById("strictbtn").style.background = "white";
@@ -52,43 +50,41 @@ function strictMode() {
 function player(color) {
     if (color === "red") {
         game.sound.red
+    } else if (color === "blue") {
+        game.sound.blue;
+    } else if (color === "green") {
+        game.sound.green;
+    } else {
+        game.sound.yellow;
     }
 
     game.player.push(color);
 
     if (game.gameInProgress.length === game.player.length) {
         if (game.gameInProgress.toString() !== game.player.toString()) {
-            console.log("Is this being run:", strictly())
-            alert('Wrong moves,please do try again')
-            clear();
-            flush();
+            if (game.strict) {
+                alert('you were wrong,you loose')
+                restart()
+
+            } else {
+                alert('Wrong moves,please do try again')
+                clear();
+                flush();
+            }
         } else {
             addColor();
             clear();
-
         }
-    }
 
+
+    }
 }
+
+
 function clear() {
     game.player = [];
 }
-function strictly() {
-    if (game.gameInProgress.length === game.player.length) {
-        if (game.gameInProgress.toString() !== game.player.toString()) {
-            if (game.strict === "off") {
-                alert('you were wrong,you loose')
-                clear();
-                game.gameInProgress = [];
-            }
 
-        } else {
-            addColor();
-            clear();
-        }
-    }
-
-}
 
 
 function startGame() {
