@@ -25,9 +25,11 @@ function flush() {
     var i = 0;
     var change = setInterval(function () {
         console.log(game.gameInProgress[i])
-        document.getElementById(game.gameInProgress[i]).style.background = game.gameInProgress[i];
+
+        document.getElementById(game.gameInProgress[i]).classList.add(game.gameInProgress[i] + "_dark")
+
         setTimeout(function () {
-            document.getElementById(game.gameInProgress[i - 1]).style.background = game.color[0];
+            document.getElementById(game.gameInProgress[i - 1]).classList.remove(game.gameInProgress[i - 1] + "_dark");
         }, 500);
         i++;
         if (i == game.gameInProgress.length) {
@@ -36,11 +38,11 @@ function flush() {
     }, 1000);
 }
 function strictMode() {
-    if (game.strict === "Off") {
+    if (game.strict === false) {
         document.getElementById("strictbtn").innerHTML = "Strict On"
         document.getElementById("strictbtn").style.background = "green";
     } else {
-        game.strict = "Off"
+        game.strict = false;
         document.getElementById("strictbtn").innerHTML = "Strict Off"
         document.getElementById("strictbtn").style.background = "white";
     }
@@ -57,15 +59,12 @@ function player(color) {
     } else {
         game.sound.yellow;
     }
-
     game.player.push(color);
-
     if (game.gameInProgress.length === game.player.length) {
         if (game.gameInProgress.toString() !== game.player.toString()) {
             if (game.strict) {
                 alert('you were wrong,you loose')
                 restart()
-
             } else {
                 alert('Wrong moves,please do try again')
                 clear();
@@ -75,18 +74,11 @@ function player(color) {
             addColor();
             clear();
         }
-
-
     }
 }
-
-
 function clear() {
     game.player = [];
 }
-
-
-
 function startGame() {
     if (game.gameInProgress.length > 0) {
         alert('sorry, game already in progress');

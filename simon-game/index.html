@@ -1,65 +1,37 @@
-<!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Simon Game</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
 </head>
-
-<body>
-
-  </head>
 
 <body>
     <center>
         <h1>Simon Game</h1>
         <div class="container-fluid">
             <div class="center">
-                <button onclick="player('red')" class="buttons" id="red" val="0">red</button>
-                <button onclick="player('yellow')" class="buttons" id="yellow" val="3">yellow</div>
+                <button onclick="player('red')" class="buttons red" id="red" val="0">red</button>
+                <button onclick="player('yellow')" class="buttons yellow" id="yellow" val="3">yellow</div>
 
 
         </div>
         <div class="center">
-            <button onclick="player('blue')" class="buttons" id="blue" val="1">blue</button>
-                <button onclick="player('green')" class="buttons" id="green" val="2">green</button>
+            <button onclick="player('blue')" class="buttons blue" id="blue" val="1">blue</button>
+                <button onclick="player('green')" class="buttons green" id="green" val="2">green</button>
                 <center>
             </div>
         </div>
+
         <p>Count</p>
         <div id="countspace"></div>
         </div>
+
         <br>
         <button id="startbtn" onclick="startGame()">Start</button>
 
         </div>
-        <br><br>
+
+        <br>
+        <br>
         <button onclick="strictMode()" id="strictbtn">strict-off</button>
-        <br><br>
+        <br>
+        <br>
 
         <button onclick="restart()" id="reset">reset</button>
-
-
-
-
-
-
         </div>
         </div>
-  
-  
-
-    <script  src="js/index.js"></script>
-
-
-
-
-</body>
-
-</html>
