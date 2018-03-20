@@ -1,9 +1,19 @@
-html,
+
+.textarea {
+    background-color:purple;
+    width: 500%;
+    left: 733px;
+    position: fixed;
+    justify-content: inherit;
+    font-size: 24px;
+    text-align: left;
+    height: 500px;
+  }
 body {
-  height: 100%;
-  width: 100%;
+  background-color:white;
+}
+h1{
+    text-align: center; 
+    
 }
 
-body {
-  background-color:silver;
-}
