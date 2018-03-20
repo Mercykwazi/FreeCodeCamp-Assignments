@@ -11,8 +11,8 @@ export default class Input extends React.Component {
         return (
             <div>
                 <label>
-                    <h4> is this even working</h4>
-                    <input type="text" onChange={this.handleChange.bind(this)} />
+
+                    <textarea onChange={this.handleChange.bind(this)} ></textarea>
                 </label><br />
             
                 
