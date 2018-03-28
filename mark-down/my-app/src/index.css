@@ -1,14 +1,22 @@
 
-.textarea {
-    background-color:purple;
-    width: 500%;
-    left: 733px;
-    position: fixed;
-    justify-content: inherit;
-    font-size: 24px;
-    text-align: left;
-    height: 500px;
-  }
+textarea{
+  width: 45%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background:black;
+}
+h1 {
+  background-color:silver;
+  width: full;
+  height: full;
+  padding: 10px 10px;
+  color: grey;
+}
+
 body {
   background-color:white;
 }

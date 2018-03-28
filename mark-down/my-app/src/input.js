@@ -12,7 +12,7 @@ export default class Input extends React.Component {
             <div>
                 <label>
 
-                    <textarea onChange={this.handleChange.bind(this)} ></textarea>
+                    <textarea placeholder="Please type your text here..." onChange={this.handleChange.bind(this)} ></textarea>
                 </label><br />
             </div>
         )

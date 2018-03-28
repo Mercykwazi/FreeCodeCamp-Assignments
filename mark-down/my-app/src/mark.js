@@ -3,6 +3,7 @@ import marked from 'marked';
 
 export default class Markdown extends React.Component {
     render() {
-        return  <p dangerouslySetInnerHTML={{ __html: marked(this.props.result) }} /> 
+
+      return  <p dangerouslySetInnerHTML={{ __html: marked(this.props.result) }} />
     }
 }
