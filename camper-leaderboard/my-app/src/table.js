@@ -6,15 +6,26 @@ export default class Table extends React.Component {
         super();
         this.state = {
             storage: [],
-        
+            position: [],
         };
     };
+    recent() {
+        Axios.get("https://fcctop100.herokuapp.com/api/fccusers/top/recent")
+            .then(response => {
+                this.setState({ storage: response.data });
+
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     componentDidMount() {
         Axios.get('https://fcctop100.herokuapp.com/api/fccusers/top/alltime')
             .then(response => {
-                this.setState({ storage: response.data})
-                console.log(this.state.storage)
-                console.log(response.data)
+                this.setState({ storage: response.data })
+                // console.log(this.state.storage)
+                // console.log(response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -24,21 +35,26 @@ export default class Table extends React.Component {
     render() {
         return (
             <div >
+                <button onClick={this.recent.bind(this)}>working!</button>
                 <table >
                     <thead>
-
+                        
                         <th>Camper-Name</th>
-                        <th>Point-in-30-Days</th>
+                        <th >Point-in-30-Days</th>
                         <th>All-Time-Points</th>
                     </thead>
-                    {this.state.storage.map(uData =>
+                    {this.state.storage.map(userData =>
+
                         <tbody>
-                            <td>{uData.username}</td>
-                            <td>{uData.recent}</td>
-                            <td>{uData.alltime}</td>
+               
+                            <td>{userData.username}</td>
+                            <td>{userData.recent}</td>
+                            <td>{userData.alltime}</td>
                         </tbody>)}
 
 
+        
+            
                 </table>
 
             </div>
