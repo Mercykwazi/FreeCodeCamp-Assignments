@@ -1,4 +1,4 @@
-//import React from "react"
+
 import React from 'react'
 import Axios from "axios";
 export default class Table extends React.Component {
@@ -13,7 +13,10 @@ export default class Table extends React.Component {
         Axios.get("https://fcctop100.herokuapp.com/api/fccusers/top/recent")
             .then(response => {
                 this.setState({ storage: response.data });
-
+                for (var i = 1; i < response.data.length; i++) {
+                    this.state.position.push(i)
+                 
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -23,9 +26,12 @@ export default class Table extends React.Component {
     componentDidMount() {
         Axios.get('https://fcctop100.herokuapp.com/api/fccusers/top/alltime')
             .then(response => {
-                this.setState({ storage: response.data })
-                // console.log(this.state.storage)
-                // console.log(response.data)
+                for (var i = 0; i < response.data.length; i++) {
+                    response.data[i]["number"] = i + 1;
+                    
+                }
+                this.setState({ storage: response.data });
+                console.log(response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -35,29 +41,33 @@ export default class Table extends React.Component {
     render() {
         return (
             <div >
-                <button onClick={this.recent.bind(this)}>working!</button>
                 <table >
                     <thead>
-                        
+                        <th>#</th>
+                        <th>Images</th>
                         <th>Camper-Name</th>
-                        <th >Point-in-30-Days</th>
-                        <th>All-Time-Points</th>
+                        <th ><button class ="just" onClick={this.recent.bind(this)}>recent </button></th>
+                        <th >< button class="just" onClick={this.componentDidMount.bind(this)}>Point-in-30-Days</button></th>
+                     
                     </thead>
                     {this.state.storage.map(userData =>
 
                         <tbody>
-               
+                            <td>{userData.number}</td>
+
+                            <td><img alt="" src={userData.img} /> </td>
                             <td>{userData.username}</td>
                             <td>{userData.recent}</td>
                             <td>{userData.alltime}</td>
                         </tbody>)}
 
 
-        
-            
+
+
                 </table>
 
             </div>
+            
         )
     }
 }
