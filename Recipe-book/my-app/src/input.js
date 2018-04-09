@@ -9,11 +9,12 @@ export default class Input extends React.Component {
         const newIngredient = e.target.value;
         this.props.changeIngredients(newIngredient)
     }
+
     render() {
         return (
             <div>
 
-                <input onChange={this.eventHandler.bind(this)} type="text" placeholder="Please type your text here..." />
+                <input  onChange={this.eventHandler.bind(this)} type="text" placeholder="Recipe Name" />
 
                 <br />
                 <br />
