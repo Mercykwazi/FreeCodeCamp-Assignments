@@ -31,12 +31,15 @@ class Main extends React.Component {
     editRecipe(recipe) {
         var updatedItems = prompt("please edit your Ingredients", recipe);
         console.log("updated iteams", updatedItems)
-        console.log("fromLs", this.state.fromLS)
-        var ingredients = this.state.fromLS;
-        const ingr = ingredients.find(ingri => ingri.Ingredients === "Ingredients")
-        console.log('ingr', ingr);
-        
-        
+
+        var recipeArray = this.state.fromLS;
+        console.log("recipeArray", recipeArray)
+        const recipes = recipeArray.find(function (r) { return r.Ingredients === recipe })
+      
+        console.log('recipe',recipes);
+
+
+
     }
     //function isCherries(fruit) { 
     //     return fruit.name === 'cherries';
@@ -54,35 +57,35 @@ class Main extends React.Component {
 
     //     }
     // })
-//}
+    //}
 
-storeRecipe() {
-    var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients };
-    var list = this.state.fromLS;
-    list.push(recipe);
-    localStorage.setItem('data', JSON.stringify(list));
-    console.log('fromLs', this.state.fromLS)
-    var parsed = JSON.parse(localStorage.getItem('data'));
-    this.setState({ fromLS: parsed });
-}
-componentDidMount() {
-    var parsed = JSON.parse(localStorage.getItem('data'));
-    if (parsed) {
+    storeRecipe() {
+        var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients };
+        var list = this.state.fromLS;
+        list.push(recipe);
+        localStorage.setItem('data', JSON.stringify(list));
+        console.log('fromLs', this.state.fromLS)
+        var parsed = JSON.parse(localStorage.getItem('data'));
         this.setState({ fromLS: parsed });
     }
-}
+    componentDidMount() {
+        var parsed = JSON.parse(localStorage.getItem('data'));
+        if (parsed) {
+            this.setState({ fromLS: parsed });
+        }
+    }
 
 
-render() {
-    return (
-        <div>
-            <h1>Recipe Box</h1>
-            <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
-            <button onClick={this.storeRecipe.bind(this)} class="btn btn-secondary" > Add Recipe</button>
-            <List list={this.state.fromLS} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
-        </div>
-    )
-}
+    render() {
+        return (
+            <div>
+                <h1>Recipe Box</h1>
+                <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
+                <button onClick={this.storeRecipe.bind(this)} class="btn btn-secondary" > Add Recipe</button>
+                <List list={this.state.fromLS} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
+            </div>
+        )
+    }
 }
 const app = document.getElementById("root")
 ReactDOM.render(<Main />, app);
