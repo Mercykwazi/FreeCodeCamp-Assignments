@@ -28,37 +28,18 @@ class Main extends React.Component {
         })
     }
 
-    editRecipe(recipe) {
-        var updatedItems = prompt("please edit your Ingredients", recipe);
+    editRecipe(ingredients) {
+        var updatedItems = prompt("please edit your Ingredients", ingredients);
         console.log("updated iteams", updatedItems)
-
         var recipeArray = this.state.fromLS;
-        console.log("recipeArray", recipeArray)
-        const recipes = recipeArray.find(function (r) { return r.Ingredients === recipe })
-      
-        console.log('recipe',recipes);
-
-
-
+        const recipes = recipeArray.find(function (r) { return r.Ingredients === ingredients })
+        var position = this.state.fromLS.indexOf(recipes)
+        recipes.Ingredients = updatedItems;
+        this.state.fromLS[position] = recipes
+        this.setState({ fromLS: this.state.fromLS })
+        localStorage.setItem('data', JSON.stringify(this.state.fromLS));
+        console.log('recipe', this.state.fromLS);
     }
-    //function isCherries(fruit) { 
-    //     return fruit.name === 'cherries';
-    // }
-    // console.log("ingridients", ingridients)
-
-
-    // this.state.fromLS.forEach(iteam => {
-    //     if (iteam.item === item) {
-    //         this.state.fromLS.indexOf(iteam);
-    //         this.state.fromLS.splice(this.state.fromLS.indexOf(iteam), this.state.fromLS.indexOf(iteam), updatedItems);
-    //          localStorage.setItem("editedRecipe", updatedItems);
-    // localStorage.getItem('editedRecipe')
-    // this.setState({ fromLS: localStorage.setItem("editedRecipe", updatedItems) })
-
-    //     }
-    // })
-    //}
-
     storeRecipe() {
         var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients };
         var list = this.state.fromLS;
