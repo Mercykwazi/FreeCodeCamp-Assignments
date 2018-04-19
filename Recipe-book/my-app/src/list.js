@@ -4,8 +4,8 @@ export default class List extends React.Component {
     eventHandler(name) {
         this.props.deleteButton(name)
     }
-    edit(names) {
-        this.props.editButton(names)
+    edit(name) {
+        this.props.editButton(name)
     }
 
     render() {
