@@ -12,9 +12,9 @@ class Main extends React.Component {
     }
     displayer() {
         if(this.state.on===false){
-            this.setState({on:false})
+            this.setState({on:true})
             this.setState({list:"Ingredients"})
-            this.setState({Ingredients:list})
+            this.setState({Ingredients:this.state.list})
         }else{
             this.setState({on:true})
             this.setState({list:""})
