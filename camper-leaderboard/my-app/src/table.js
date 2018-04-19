@@ -15,7 +15,7 @@ export default class Table extends React.Component {
                 this.setState({ storage: response.data });
                 for (var i = 1; i < response.data.length; i++) {
                     this.state.position.push(i)
-                 
+                 console.log("position",this.state.position)
                 }
             })
             .catch(err => {
@@ -23,12 +23,11 @@ export default class Table extends React.Component {
             });
     }
 
-    componentDidMount() {
+    what() {
         Axios.get('https://fcctop100.herokuapp.com/api/fccusers/top/alltime')
             .then(response => {
                 for (var i = 0; i < response.data.length; i++) {
-                    response.data[i]["number"] = i + 1;
-                    
+                    response.data[i]["number"] = i + 1;        
                 }
                 this.setState({ storage: response.data });
                 console.log(response.data)
@@ -46,8 +45,8 @@ export default class Table extends React.Component {
                         <th>#</th>
                         <th>Images</th>
                         <th>Camper-Name</th>
-                        <th ><button class ="just" onClick={this.recent.bind(this)}>recent </button></th>
-                        <th >< button class="just" onClick={this.componentDidMount.bind(this)}>Point-in-30-Days</button></th>
+                        <th ><button  onClick={this.recent.bind(this)}>recent </button></th>
+                        <th >< button  onClick={this.recent.bind(this)}>Point-in-30-Days</button></th>
                      
                     </thead>
                     {this.state.storage.map(userData =>

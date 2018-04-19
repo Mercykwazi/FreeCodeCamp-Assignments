@@ -7,12 +7,24 @@ class Main extends React.Component {
     constructor() {
         super()
 
-        this.state = { fromLS: [], Name: "", Ingredients: '' }
-    }
+        this.state = { fromLS: [], Name: "", Ingredients: '', on: false,list:"" }
 
+    }
+    displayer() {
+        if(this.state.on===false){
+            this.setState({on:false})
+            this.setState({list:"Ingredients"})
+            this.setState({Ingredients:list})
+        }else{
+            this.setState({on:true})
+            this.setState({list:""})
+        }
+        console.log("is this working")
+    }
     changeName(item) {
         this.setState({ Name: item })
     }
+
     changeIngredients(item) {
         this.setState({ Ingredients: item })
     }
@@ -63,7 +75,7 @@ class Main extends React.Component {
                 <h1>Recipe Box</h1>
                 <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
                 <button onClick={this.storeRecipe.bind(this)} class="btn btn-secondary" > Add Recipe</button>
-                <List list={this.state.fromLS} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
+                <List  list={this.state.fromLS} deleteButton={this.deleteRecipe.bind(this)} displayer={this.displayer.bind(this)} editButton={this.editRecipe.bind(this)} />
             </div>
         )
     }
