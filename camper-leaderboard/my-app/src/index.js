@@ -11,7 +11,7 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-          <h1 class="container-fluid" >  Camper Leaderboard</h1>
+          <h1 className="container-fluid" >  Camper Leaderboard</h1>
             <Table />
       </div>
       

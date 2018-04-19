@@ -83,3 +83,8 @@ modal.update({
 close the modal
 
 modal.close(); // close immediately
+//  var position = this.state.fromLS.indexOf(recipes)
+        recipes.Ingredients = updatedItems;
+        this.state.fromLS[position]=recipes
+        this.setState({fromLS:this.state.fromLS})
+        console.log('recipe', this.state.fromLS);
