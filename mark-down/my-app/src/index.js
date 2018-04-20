@@ -7,29 +7,31 @@ import Markdown from './mark';
 
 
 
-export default class Convertor extends React.Component {
+ class Main extends React.Component {
     constructor() {
         super();
         this.state = { input: "" };
     }
-    changeState(iteam) {
-        this.setState({ input: iteam })
+    changeState(item) {
+        this.setState({ input: item })
     }
-  
+
 
     render() {
-        console.log(this.state)
+
         return (
             <div>
-                <h1 >Welcome to my Mark Down Previewer</h1>
+                <h1 >Markdown Previewer</h1>
                 <Input changeState={this.changeState.bind(this)} />
-                <Markdown result = {this.state.input}/>
+                <h3>Your output is below...</h3>
+                <Markdown result={this.state.input} />
+               
             </div>
         )
     }
 }
 const app = document.getElementById("app")
-ReactDOM.render(<Convertor />, app);
+ReactDOM.render(<Main />, app);
 
 
 
