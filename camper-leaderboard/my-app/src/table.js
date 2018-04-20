@@ -28,12 +28,12 @@ export default class Table extends React.Component {
         return (
             <div >
                 <table >
-                    <thead>
+                    <thead >
                         <th>#</th>
                         <th>Images</th>
                         <th>Camper-Name</th>
-                        <th ><button onClick={()=>this.getUser("recent")}>recent </button></th>
-                        <th >< button onClick={()=>this.getUser("alltime")}>Point-in-30-Days</button></th>
+                        <th ><button className="button" onClick={()=>this.getUser("recent")}>recent </button></th>
+                        <th >< button className="button" onClick={()=>this.getUser("alltime")}>alltime</button></th>
 
                     </thead>
                     
