@@ -1,19 +1,31 @@
- th, td {
-    border-bottom: 0.7px solid #e7e7e7;
-    
-       
-    } 
-    table{
-        border: 1px solid black;
-        background-color: #006400;
-     color:white;
-        height: 100px;
-        width: 100%;
-        line-height: 60px;
-        margin-left: 20px !important;
-        margin-right: 20px !important;
+ body{
+    background-color: darkgreen;
+ }
+ thead{
+  background-color: darkgreen;
+height: 90px;
     }
- 
+
+ tbody{
+ background-color:white; 
+}
+
+ .button {
+    background-color: colorless;
+    font-size: 16px;  
+} 
+    table,thead,tbody{
+        border: 1px solid black;
+         color: black;
+       
+    }
+    table{
+        width: 800px;
+        margin: 40px auto 80px auto;
+        background-color: white;
+        font-size: 16px;
+    }
+
  img {
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -23,10 +35,11 @@
  
 
 .container-fluid {
-    background-color:green;
+    background-color:darkgreen;
+    height: 90px;
     font-size:40px;
     text-align:center;
-    /* padding: 14px 16px; */
+  
 
 }
 
