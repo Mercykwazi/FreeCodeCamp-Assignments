@@ -7,20 +7,11 @@ class Main extends React.Component {
     constructor() {
         super()
 
-        this.state = { fromLS: [], Name: "", Ingredients: '', on: false,list:"" }
+        this.state = { fromLS: [], Name: "", Ingredients: '' }
+
 
     }
-    displayer() {
-        if(this.state.on===false){
-            this.setState({on:true})
-            this.setState({list:"Ingredients"})
-            this.setState({Ingredients:this.state.list})
-        }else{
-            this.setState({on:true})
-            this.setState({list:""})
-        }
-        console.log("is this working")
-    }
+
     changeName(item) {
         this.setState({ Name: item })
     }
@@ -53,7 +44,7 @@ class Main extends React.Component {
         console.log('recipe', this.state.fromLS);
     }
     storeRecipe() {
-        var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients };
+        var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients, status: false };
         var list = this.state.fromLS;
         list.push(recipe);
         localStorage.setItem('data', JSON.stringify(list));
@@ -67,7 +58,19 @@ class Main extends React.Component {
             this.setState({ fromLS: parsed });
         }
     }
-
+    hideOrShow(recipeToHide) {
+        var position = this.state.fromLS.indexOf(recipeToHide);
+        if (recipeToHide.status) {
+            this.state.fromLS[position].Ingredients = null;
+            this.state.fromLS[position].status = false;
+            this.setState({ fromLS: this.state.fromLS })
+        } else {
+            var parsed = JSON.parse(localStorage.getItem('data'));
+            this.state.fromLS[position].status = true;
+            this.state.fromLS[position].Ingredients = parsed[position].Ingredients;
+            this.setState({ fromLS: this.state.fromLS })
+        }
+    }
 
     render() {
         return (
@@ -75,7 +78,7 @@ class Main extends React.Component {
                 <h1>Recipe Box</h1>
                 <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
                 <button onClick={this.storeRecipe.bind(this)} class="btn btn-secondary" > Add Recipe</button>
-                <List  list={this.state.fromLS} deleteButton={this.deleteRecipe.bind(this)} displayer={this.displayer.bind(this)} editButton={this.editRecipe.bind(this)} />
+                <List list={this.state.fromLS} showOrHide={this.hideOrShow.bind(this)} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
             </div>
         )
     }
