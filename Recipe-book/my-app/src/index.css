@@ -19,5 +19,12 @@ textarea {
     font-size: 16px;
     margin: 4px 2px;
 	cursor: pointer;
-	width: 100%
+	width: 51%;
+}
+.button1{
+	padding: 12px
+
+}
+.button2{
+	padding: 12px
 }
