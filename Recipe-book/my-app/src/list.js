@@ -1,5 +1,5 @@
 import React from 'react';
-//import Status from './status';
+import Status from './status';
 export default class List extends React.Component {
 
 
@@ -27,12 +27,10 @@ export default class List extends React.Component {
                     this.props.list.map(element => {
                         return <div>
                             < button className="button" onClick={() => this.display(element.Name)}>{element.Name}</button><br />
-                            {element.status === true ? <div></div> : <div>  <li>{element.Ingredients.split(",").map(e => { return <ul>{e}</ul> })}</li>
-                                <button className="button1" onClick={() => this.eventHandler(element.Name)}>delete </button>
-                                <button className="button2" onClick={() => this.edit(element.Ingredients)}>edit  </button> </div>} </div>
+                            <Status list={element.Ingredients} Name={element.Name} status={element.status} />
+                        </div>
                     })
                 }
-                 {/* <Status list={this.state.storage} /> */}
             </div >
         )
     }
