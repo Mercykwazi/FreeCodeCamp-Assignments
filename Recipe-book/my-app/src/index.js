@@ -38,7 +38,6 @@ class Main extends React.Component {
         console.log("updated items", updatedItems)
         var recipeArray = this.state.storage;
         const recipe = recipeArray.find(function (r) { return r.Ingredients === ingredients })
-        //var position = this.state.storage.indexOf(recipe)
         recipe.Ingredients = updatedItems;
         this.setState({ storage: recipeArray })
         localStorage.setItem('data', JSON.stringify(this.state.storage));
@@ -62,7 +61,6 @@ class Main extends React.Component {
     hideOrShow(recipeToHide) {
         var position = this.state.storage.indexOf(recipeToHide);
         if (recipeToHide.status) {
-            //this.state.storage[position].Ingredients = null;
             this.state.storage[position].status = false;
             this.setState({ storage: this.state.storage })
         } else {
