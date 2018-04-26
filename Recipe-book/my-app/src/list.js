@@ -13,7 +13,9 @@ export default class List extends React.Component {
 
 
     }
-    
+    componentWillUpdate() {
+        localStorage.setItem('data', JSON.stringify(this.props.list));
+    }
     delete(name) {
         this.props.deleteButton(name)
     }
