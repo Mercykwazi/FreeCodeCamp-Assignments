@@ -8,11 +8,13 @@ export default class Status extends React.Component {
 
     render() {
         console.log("status", this.props.ingredients)
-        console.log("status",this.props.status)
+        console.log("status", this.props.status)
         return (
             <div>
+                
+                < button className="button" onClick={() => this.setState({ status: !this.state.status })}>{this.props.name}</button>
                 {
-                    this.props.status === true ? <div>
+                    this.state.status === true ? <div>
                         <li>
                             {
                                 this.props.ingredients.split(",").map(element => {
@@ -20,11 +22,11 @@ export default class Status extends React.Component {
                                 })
                             }
                         </li>
-                        <button className="button1" onClick={() => this.props.delete(this.props.name)}>delete </button>
-                        <button className="button2" onClick={() => this.props.edit(this.props.ingredients)}>edit  </button></div> : <div></div>
-                     // localStorage.setItem('data', JSON.stringify(this.state.storage));
+                        <button className="button2" onClick={() => this.props.delete(this.props.name)}>delete </button>
+                        <button className="button3" onClick={() => this.props.edit(this.props.ingredients)}>edit  </button></div> : <div></div>
 
-              }
+
+                }
             </div>
 
         )

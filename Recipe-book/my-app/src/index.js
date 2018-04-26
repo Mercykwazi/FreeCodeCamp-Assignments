@@ -75,10 +75,10 @@ class Main extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="container-fluid">
                 <h1>Recipe Box</h1>
                 <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
-                <button onClick={this.storeRecipe.bind(this)} className="btn btn-secondary" > Add Recipe</button>
+                <button className="button1" onClick={this.storeRecipe.bind(this)}  > Add Recipe</button>
                 <List list={this.state.storage} showOrHide={this.hideOrShow.bind(this)} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
                
             </div>
