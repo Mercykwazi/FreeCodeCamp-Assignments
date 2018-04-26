@@ -13,9 +13,7 @@ export default class List extends React.Component {
 
 
     }
-    componentWillUpdate() {
-        localStorage.setItem('data', JSON.stringify(this.props.list));
-    }
+
     delete(name) {
         this.props.deleteButton(name)
     }
@@ -32,7 +30,6 @@ export default class List extends React.Component {
                 {
                     this.props.list.map(element => {
                         return <div>
-                            < button className="button" onClick={() => this.display(element.Name)}>{element.Name}</button><br />
                             <Status ingredients={element.Ingredients} name={element.Name} delete={this.delete.bind(this)} edit={this.edit.bind(this)} status={element.status} />
                         </div>
                     })
