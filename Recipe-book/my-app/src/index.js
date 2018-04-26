@@ -69,7 +69,7 @@ class Main extends React.Component {
             var parsed = JSON.parse(localStorage.getItem('data'));
             this.state.storage[position].status = true;
             this.setState({ storage: this.state.storage })
-            console.log("parsed", parsed[position].Ingredients)
+          
         }
     }
 
