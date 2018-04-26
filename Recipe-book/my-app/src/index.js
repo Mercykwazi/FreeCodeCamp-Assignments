@@ -23,10 +23,12 @@ class Main extends React.Component {
     }
 
     deleteRecipe(name) {
+        console.log("deleting")        
         this.state.storage.forEach(item => {
             if (item.Name === name) {
                 this.state.storage.splice(this.state.storage.indexOf(item), this.state.storage.indexOf(item) + 1)
                 this.setState({ storage: this.state.storage })
+                localStorage.setItem('data', JSON.stringify(this.state.storage));
 
 
             }
