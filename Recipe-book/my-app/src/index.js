@@ -22,17 +22,21 @@ class Main extends React.Component {
         this.setState({ Ingredients: item })
     }
 
-    deleteRecipe(name) {
-        console.log("deleting")        
-        this.state.storage.forEach(item => {
-            if (item.Name === name) {
-                this.state.storage.splice(this.state.storage.indexOf(item), this.state.storage.indexOf(item) + 1)
-                this.setState({ storage: this.state.storage })
-                localStorage.setItem('data', JSON.stringify(this.state.storage));
-
+    deleteRecipe(currentRecipe) {
+        var renewed = [];
+        var stored = this.state.storage;
+        for (var i = 0; i < stored.length; i++) {
+            if (stored[i].Name !== currentRecipe.Name || stored[i].Ingredients !== currentRecipe.Ingredients) {
+                renewed.push(stored[i])
+            }else if(stored[i].Name !== currentRecipe.Name && stored[i].Ingredients !== currentRecipe.Ingredients) {
+            renewed.push(stored[i])
 
             }
-        })
+            this.setState({ storage: renewed })
+        }
+
+
+        localStorage.setItem('data', JSON.stringify(renewed));
     }
 
     editRecipe(ingredients) {
@@ -60,18 +64,18 @@ class Main extends React.Component {
             this.setState({ storage: parsed });
         }
     }
-    hideOrShow(recipeToHide) {
-        var position = this.state.storage.indexOf(recipeToHide);
-        if (recipeToHide.status) {
-            this.state.storage[position].status = false;
-            this.setState({ storage: this.state.storage })
-        } else {
-            var parsed = JSON.parse(localStorage.getItem('data'));
-            this.state.storage[position].status = true;
-            this.setState({ storage: this.state.storage })
-          
-        }
-    }
+    // hideOrShow(recipeToHide) {
+    //     var position = this.state.storage.indexOf(recipeToHide);
+    //     if (recipeToHide.status) {
+    //         this.state.storage[position].status = false;
+    //         this.setState({ storage: this.state.storage })
+    //     } else {
+    //         var parsed = JSON.parse(localStorage.getItem('data'));
+    //         this.state.storage[position].status = true;
+    //         this.setState({ storage: this.state.storage })
+
+    //     }
+    // }
 
     render() {
         return (
@@ -79,8 +83,8 @@ class Main extends React.Component {
                 <h1>Recipe Box</h1>
                 <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
                 <button className="button1" onClick={this.storeRecipe.bind(this)}  > Add Recipe</button>
-                <List list={this.state.storage} showOrHide={this.hideOrShow.bind(this)} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
-               
+                <List list={this.state.storage} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
+
             </div>
         )
     }
