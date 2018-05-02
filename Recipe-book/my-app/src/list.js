@@ -6,13 +6,13 @@ export default class List extends React.Component {
         super(props)
         this.state = { storage: this.props.list }
     }
-    display(recipeName) {
-        var obj = this.props.list.find(item => item.Name === recipeName);
-        console.log("obj", obj)
-        this.props.showOrHide(obj)
+    // display(recipeName) {
+    //     var obj = this.props.list.find(item => item.Name === recipeName);
+    //     console.log("obj", obj)
+    //     this.props.showOrHide(obj)
 
 
-    }
+    // }
 
     delete(name) {
         this.props.deleteButton(name)
@@ -24,6 +24,7 @@ export default class List extends React.Component {
     render() {
         console.log("this is the list", this.props.list)
         console.log("deleting", this.props.deleteButton)
+        
 
         return (
             < div >
