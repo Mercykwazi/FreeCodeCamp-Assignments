@@ -8,12 +8,13 @@ import List from './list';
 class Main extends React.Component {
     constructor() {
         super()
-
         this.state = { storage: [], Name: "", Ingredients: '' }
 
 
     }
-
+    // clearInput() {
+    //     this.setState({ Name: "", Ingredients: "" })
+    // }
     changeName(item) {
         this.setState({ Name: item })
     }
@@ -28,8 +29,8 @@ class Main extends React.Component {
         for (var i = 0; i < stored.length; i++) {
             if (stored[i].Name !== currentRecipe.Name || stored[i].Ingredients !== currentRecipe.Ingredients) {
                 renewed.push(stored[i])
-            }else if(stored[i].Name !== currentRecipe.Name && stored[i].Ingredients !== currentRecipe.Ingredients) {
-            renewed.push(stored[i])
+            } else if (stored[i].Name !== currentRecipe.Name && stored[i].Ingredients !== currentRecipe.Ingredients) {
+                renewed.push(stored[i])
 
             }
             this.setState({ storage: renewed })
@@ -51,12 +52,19 @@ class Main extends React.Component {
     }
     storeRecipe() {
         var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients, status: false };
-        var list = this.state.storage;
-        list.push(recipe);
-        localStorage.setItem('data', JSON.stringify(list));
-        console.log('storage', this.state.storage)
-        var parsed = JSON.parse(localStorage.getItem('data'));
-        this.setState({ storage: parsed });
+        if (this.state.Name === undefined || this.state.Name === "") {
+            alert("unable to add empty product")
+        //  } else if (recipe.Ingredients) {
+        //      alert("recipe name already exist")
+        } else {
+            var list = this.state.storage;
+            list.push(recipe);
+            localStorage.setItem('data', JSON.stringify(list));
+            console.log('storage', this.state.storage)
+            var parsed = JSON.parse(localStorage.getItem('data'));
+            this.setState({ storage: parsed });
+        }
+        //this.clearInput()
     }
     componentDidMount() {
         var parsed = JSON.parse(localStorage.getItem('data'));
@@ -64,18 +72,7 @@ class Main extends React.Component {
             this.setState({ storage: parsed });
         }
     }
-    // hideOrShow(recipeToHide) {
-    //     var position = this.state.storage.indexOf(recipeToHide);
-    //     if (recipeToHide.status) {
-    //         this.state.storage[position].status = false;
-    //         this.setState({ storage: this.state.storage })
-    //     } else {
-    //         var parsed = JSON.parse(localStorage.getItem('data'));
-    //         this.state.storage[position].status = true;
-    //         this.setState({ storage: this.state.storage })
 
-    //     }
-    // }
 
     render() {
         return (
