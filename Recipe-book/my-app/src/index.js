@@ -1,3 +1,4 @@
+import ModalForEdits from "./modal-to-edit"
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Input from './input';
@@ -9,7 +10,7 @@ import Form from './form';
 class Main extends React.Component {
     constructor() {
         super()
-        this.state = { storage: [], Name: "", Ingredients: '' ,editShow:false}
+        this.state = { storage: [], Name: "", Ingredients: '', editShow: false }
 
 
     }
@@ -42,14 +43,27 @@ class Main extends React.Component {
     }
 
     editRecipe(ingredients) {
-        var updatedItems = ( ingredients);
+        var updatedItems = (ingredients);
         console.log("updated items", updatedItems)
         var recipeArray = this.state.storage;
         const recipe = recipeArray.find(function (r) { return r.Ingredients === ingredients })
-        recipe.Ingredients = updatedItems;
-        this.setState({ storage: recipeArray,editShow:true })
+        // recipe.Ingredients = updatedItems;
+        this.setState({ Ingredients: "testing" })
+        this.setState({ storage: recipeArray, editShow: true })
         localStorage.setItem('data', JSON.stringify(this.state.storage));
         console.log('recipe', this.state.storage);
+    }
+    replacer(oldRecipe, newRecipeName, newRecipeIng) {
+        var updatedItems = { Name: newRecipeName, Ingredients: newRecipeIng };
+        var isItFound = this.state.storage
+        var found = isItFound.find(function (r) { return r.Name === oldRecipe })
+        var position = isItFound.indexOf(found);
+     var spliced= isItFound.splice(oldRecipe,position,newRecipeName)
+        console.log("updated items", found, position,spliced);
+
+        // this.setState({ storage:found })
+
+
     }
     storeRecipe() {
         var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients, status: false };
@@ -80,10 +94,9 @@ class Main extends React.Component {
                 <h1>Recipe Box</h1>
                 <Input changeName={this.changeName.bind(this)} changeIngredients={this.changeIngredients.bind(this)} />
                 <button className="button1" onClick={this.storeRecipe.bind(this)}  > Add Recipe</button>
-                <List list={this.state.storage} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
-                {this.state.editShow?<Form Name={this.state.Name} edit={this.editRecipe.bind(this)}Ingredients={this.state.Ingredients} storage={this.state.storage} />:null}
-                
-             
+                <List replacer={this.replacer.bind(this)} list={this.state.storage} deleteButton={this.deleteRecipe.bind(this)} editButton={this.editRecipe.bind(this)} />
+                {this.state.editShow ? <Form changeIngredients={this.changeName.bind(this)} Name={this.state.Name} edit={this.editRecipe.bind(this)} Ingredients={this.state.Ingredients} storage={this.state.storage} /> : null}
+
             </div>
         )
     }
