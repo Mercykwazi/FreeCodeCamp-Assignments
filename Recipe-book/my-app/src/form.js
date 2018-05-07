@@ -7,19 +7,33 @@ export default class Form extends React.Component {
         this.state = { Name: this.props.Name, ingredients: this.props.ingredients, storage: this.props.storage }
     }
 
-    saveRecipe(name) {
-        this.props.edit(name);
+    saveRecipe(ingredients) {
+        this.props.edit(ingredients);
+        
+    
+    }
+    eventHandler(e) {
+        const newName = e.target.value;
+        this.props.changeIngredients(newName);
+        
+        this.setState({ingredients:newName})
+        console.log("changeI",this.state.ingredients)
     }
 
     render() {
+   
+
         return (
 
 <div>
-            <textarea save={this.saveRecipe.bind(this)}  ></textarea>
-            <button onClick={this.saveRecipe.bind(this)}>Save Recipe</button>
+            <textarea value={this.state.ingredients} onChange={this.eventHandler.bind(this)}  ></textarea>
+           
+            <button onClick={()=> this.saveRecipe(this.state.ingredients)}>Save Recipe</button>
 </div>
+
         )
 
 
     }
+    
 }

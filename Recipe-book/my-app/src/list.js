@@ -31,7 +31,7 @@ export default class List extends React.Component {
                 {
                     this.props.list.map(element => {
                         return <div>
-                            <Status ingredients={element.Ingredients} name={element.Name} delete={this.delete.bind(this)} edit={this.edit.bind(this)} status={element.status} />
+                            <Status  replacer={this.props.replacer}ingredients={element.Ingredients} name={element.Name} delete={this.delete.bind(this)} edit={this.edit.bind(this)} status={element.status} />
                         </div>
                     })
                 }
