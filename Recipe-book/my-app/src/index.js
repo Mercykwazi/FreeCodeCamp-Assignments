@@ -56,12 +56,13 @@ class Main extends React.Component {
     replacer(oldRecipe, newRecipeName, newRecipeIng) {
         var updatedItems = { Name: newRecipeName, Ingredients: newRecipeIng };
         var isItFound = this.state.storage
-        var found = isItFound.find(function (r) { return r.Name === oldRecipe })
+        var found = isItFound.find(function (r) { return r.Name === oldRecipe });
         var position = isItFound.indexOf(found);
-     var spliced= isItFound.splice(oldRecipe,position,newRecipeName)
-        console.log("updated items", found, position,spliced);
+        isItFound[position] = updatedItems;
+        console.log("updated items", isItFound);
 
-        // this.setState({ storage:found })
+        this.setState({ storage: isItFound })
+        localStorage.setItem('data', JSON.stringify(this.state.storage));
 
 
     }
