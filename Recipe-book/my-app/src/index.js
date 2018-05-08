@@ -11,12 +11,7 @@ class Main extends React.Component {
     constructor() {
         super()
         this.state = { storage: [], Name: "", Ingredients: '', editShow: false }
-
-
     }
-    // clearInput() {
-    //     this.setState({ Name: "", Ingredients: "" })
-    // }
     changeName(item) {
         this.setState({ Name: item })
     }
@@ -47,7 +42,6 @@ class Main extends React.Component {
         console.log("updated items", updatedItems)
         var recipeArray = this.state.storage;
         const recipe = recipeArray.find(function (r) { return r.Ingredients === ingredients })
-        // recipe.Ingredients = updatedItems;
         this.setState({ Ingredients: "testing" })
         this.setState({ storage: recipeArray, editShow: true })
         localStorage.setItem('data', JSON.stringify(this.state.storage));

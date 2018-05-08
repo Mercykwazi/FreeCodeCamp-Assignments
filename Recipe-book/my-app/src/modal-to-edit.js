@@ -6,15 +6,15 @@ import FormControl from "react-bootstrap/lib/FormControl";
 import ControlLabel from "react-bootstrap/lib/ControlLabel";
 
 class ModalForEdits extends React.Component {
-    constructor(props, context) {
-        console.log("construting modal");
+    constructor(props) {
+
         super(props);
         this.state = {
             toShowModal: false,
             recipeName: this.props.name,
             ingredients: this.props.ingredients,
         }
-        this.toEditRecipe = this.toEditRecipe.bind(this);
+        this.editRecipe = this.editRecipe.bind(this);
     }
 
     edit(e) {
@@ -23,13 +23,13 @@ class ModalForEdits extends React.Component {
         this.setState(change)
     }
 
-    toEditRecipe() {
+    editRecipe() {
         this.setState({ toShowModal: true })
     }
     render() {
         return (
             <div>
-                <Button bsStyle="primary" onClick={e => this.toEditRecipe(e)}>
+                <Button className="button3" onClick={e => this.editRecipe(e)}>
                     Edit
         </Button>
 
@@ -39,11 +39,11 @@ class ModalForEdits extends React.Component {
                     container={this}
                     aria-labelledby="contained-modal-title"
                 >
-                    <Modal.Header>
-                        <Modal.Title id="contained-modal-title">
-                            edit the recipe
+                  
+                        <Modal.Title >
+                            edit your recipe below
             </Modal.Title>
-                    </Modal.Header>
+                   
                     <Modal.Body>
                         <input
                             name="recipeName"
@@ -52,26 +52,22 @@ class ModalForEdits extends React.Component {
 
                             type="text"
                         />
-                        <FormGroup controlId="formControlsTextarea">
+                        <FormGroup >
                             <ControlLabel />
                             <FormControl
                                 name="ingredients"
                                 onChange={this.edit.bind(this)}
-                                componentClass="input"
                                 value={this.state.ingredients}
                             />
                         </FormGroup>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={() => this.props.replacer(this.props.name, this.state.recipeName, this.state.ingredients)} >Save </Button>
-                        <Button >
-                                Close 
-                            </Button>
                     </Modal.Footer>
                 </Modal>
             </div>
-                );
-            }
-        }
-        
+        );
+    }
+}
+
 export default ModalForEdits;
