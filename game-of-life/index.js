@@ -29,17 +29,22 @@ function liveCells() {
     return board;
 }
 function getNeighbors() {
-    var neighborsPerCell =[];
+    var neighborsPerCell = [];
     for (var i = 0; i < board.length; i++) {
         var x = board[i].x;
         var y = board[i].y;
         var neighbors = [{ 'x': x - 1, 'y': y }, { 'x': x - 1, "y": y + 1 }, { "x": x, "y": y + 1 }, { "x": x + 1, "y": y + 1 }, { "x": x + 1, "y": y }, { "x": x + 1, "y": y - 1 }, { "x": x, " y": y - 1 }, { "x": x - 1, "y": y - 1 }];
-        neighborsPerCell.push(neighbors);
 
+        neighborsPerCell.push(neighbors);
     }
     return neighborsPerCell
-   
+
+
+
 }
+
+
+
 console.log(getNeighbors())
 
 
