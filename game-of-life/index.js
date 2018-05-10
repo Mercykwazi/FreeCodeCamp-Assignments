@@ -48,3 +48,4 @@ function getNeighbors() {
 console.log(getNeighbors())
 
 
+module.exports={grid}
