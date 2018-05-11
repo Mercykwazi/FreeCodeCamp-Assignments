@@ -1,8 +1,8 @@
 var gridOfDeadCells = [];
 
 function grid() {
-    for (var x = 0; x < 10; x++) {
-        for (var y = 0; y < 10; y++) {
+    for (var x = 0; x <= 4; x++) {
+        for (var y = 0; y <= 4; y++) {
             gridOfDeadCells.push({
                 x: x,
                 y: y,
@@ -43,43 +43,85 @@ function getNeighbors() {
         neighborsPerCell.push(nearestNeighbor);
     }
     return neighborsPerCell;
+
+}
+function aliveNeighbors(x, y) {
+    var nextGeneration = [];
+    var livingNeighbors = [];
+
+    console.log(board)
+    var actualCell = board.find(item => {
+        return item.x === x && item.y === y;
+    })
+    var leftNeighbor = board.find(cell => {
+        return cell.x === x - 1 && cell.y === y
+    })
+    var bottomLeftNeighbor = board.find(cell => {
+        return cell.x === x - 1 && cell.y === y + 1
+    })
+    var downBottomNeighbor = board.find(cell => {
+        return cell.x === x && cell.y === y + 1
+    })
+    var bottomRightNeighbor = board.find(cell => {
+        return cell.x === x + 1 && cell.y === y + 1
+    })
+    var rightNeighbor = board.find(cell => {
+        return cell.x === x + 1 && cell.y === y
+    })
+    var upRightNeighbor = board.find(cell => {
+        return cell.x === x + 1 && cell.y === y - 1
+    })
+    var upNeighbor = board.find(cell => {
+        return cell.x === x && cell.y === y - 1
+    })
+    var topLeftNeighbor = board.find(cell => {
+        return cell.x === x - 1 && cell.y === y - 1
+    })
+
+    if (downBottomNeighbor !== undefined && downBottomNeighbor.status === "alive") {
+        livingNeighbors.push(downBottomNeighbor)
+    } if (leftNeighbor !== undefined && leftNeighbor.status === "alive") {
+        livingNeighbors.push(leftNeighbor)
+    } if (bottomLeftNeighbor !== undefined && bottomLeftNeighbor.status === "alive") {
+        livingNeighbors.push(bottomLeftNeighbor)
+    } if (bottomRightNeighbor !== undefined && bottomRightNeighbor.status === "alive") {
+        livingNeighbors.push(bottomRightNeighbor)
+    } if (rightNeighbor !== undefined && rightNeighbor.status === "alive") {
+        livingNeighbors.push(rightNeighbor)
+    } if (upRightNeighbor !== undefined && upRightNeighbor.status === "alive") {
+        livingNeighbors.push(upRightNeighbor)
+    } if (upNeighbor !== undefined && upNeighbor.status === "alive") {
+        livingNeighbors.push(upNeighbor)
+    } if (topLeftNeighbor !== undefined && topLeftNeighbor.status === "alive") {
+        livingNeighbors.push(topLeftNeighbor)
+    }
+
+    if (livingNeighbors.length === 2 || livingNeighbors.length === 3 && actualCell.status === "alive") {
+        actualCell.status = "alive"
+        // console.log("1st", actualCell)
+    } else if (livingNeighbors.length < 2 && actualCell.status === "alive") {
+        actualCell.status = "dead";
+        //  console.log("2st", actualCell)
+    } else if (livingNeighbors.length === 3 && actualCell.status === "dead") {
+        // console.log("3st", actualCell)
+        actualCell.status = "alive";
+    } else if (livingNeighbors.length > 3 && actualCell.status === "alive") {
+        // console.log("4st", actualCell)
+        actualCell.status = "dead";
+
+    }
+    nextGeneration.push(actualCell)
+    return nextGeneration
+    //console.log("act", actualCell)
+    // return nextGeneration
+
 }
 
-function getAliveNeighbors(x, y) {
-    gridOfDeadCells.forEach(element => {
-            var e = getAliveNeighbors(element)
-            var deadCells = [];
-            var aliveCells = [];
-            e.list.forEach(cell => {
-                var c = gridOfDeadCells.find(val =>
-                    val.x === cell.x && val.y === cell.y);
-                if (c !== undefined && c.status === "Alive") {
-                    aliveCells.push(c);
-                } else if (c !== undefined && c.status === "dead")
-                    deadCells.push(c);
-    
-            })
-            if (element.status === "alive" && aliveCells.leghth === 3) {
-                element.status === "alive";
-            } else if (element.status === "dead" && aliveCells.leghth === 3) {
-                element.status === "alive";
-            } else if (element.status === "alive" && aliveCells.leghth > 3) {
-                element.status === "dead";
-            } else if (element.status === "alive" && aliveCells.leghth < 2 || aliveCells.leghth > 3) {
-                element.status === "dead";
-            }
-    
-        })
-        return gridOfDeadCells;
-    
-}
+board.forEach(cell => {
+    aliveNeighbors(cell.x, cell.y);
+})
 
-
-
-
-
-console.log("aliveneigbors",getAliveNeighbors())
-
+// aliveNeighbors(1,2)
 module.exports = {
     liveCells, getNeighbors
 }
