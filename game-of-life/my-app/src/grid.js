@@ -1,5 +1,4 @@
 var gridOfDeadCells = [];
-
 function grid() {
     for (var x = 0; x <= 4; x++) {
         for (var y = 0; y <= 4; y++) {
@@ -14,13 +13,12 @@ function grid() {
     return gridOfDeadCells
 }
 
-
-
-
 var board = grid();
 
 function liveCells() {
     var aliveCells = [{ x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }]
+    //var foundAlive = board.find(x => x.x === aliveCells.x && x.y === aliveCells.y);
+
     for (var i = 0; i < board.length; i++) {
         for (var z = 0; z < aliveCells.length; z++) {
             if (aliveCells[z].x === board[i].x && aliveCells[z].y === board[i].y) {
@@ -28,11 +26,13 @@ function liveCells() {
 
             }
         }
-    }
 
-    return board;
 }
+
+return board;
+
 var board = liveCells();
+//console.log("this is my board",board)
 function getNeighbors() {
     var neighborsPerCell = [];
     for (var i = 0; i < board.length; i++) {
@@ -46,10 +46,9 @@ function getNeighbors() {
 
 }
 function aliveNeighbors(x, y) {
+    var neighbors = getNeighbors()
     var nextGeneration = [];
     var livingNeighbors = [];
-
-    console.log(board)
     var actualCell = board.find(item => {
         return item.x === x && item.y === y;
     })
@@ -95,25 +94,28 @@ function aliveNeighbors(x, y) {
     } if (topLeftNeighbor !== undefined && topLeftNeighbor.status === "alive") {
         livingNeighbors.push(topLeftNeighbor)
     }
-
     if (livingNeighbors.length === 2 || livingNeighbors.length === 3 && actualCell.status === "alive") {
         actualCell.status = "alive"
-        // console.log("1st", actualCell)
+        //console.log("act", actualCell.status)
+        //console.log("1st", actualCell)
     } else if (livingNeighbors.length < 2 && actualCell.status === "alive") {
         actualCell.status = "dead";
-        //  console.log("2st", actualCell)
+
+        //console.log("2st", actualCell)
     } else if (livingNeighbors.length === 3 && actualCell.status === "dead") {
-        // console.log("3st", actualCell)
+        //console.log("3st", actualCell)
         actualCell.status = "alive";
     } else if (livingNeighbors.length > 3 && actualCell.status === "alive") {
         // console.log("4st", actualCell)
         actualCell.status = "dead";
 
     }
+
     nextGeneration.push(actualCell)
+    console.log(nextGeneration)
     return nextGeneration
-    //console.log("act", actualCell)
-    // return nextGeneration
+
+
 
 }
 
@@ -121,7 +123,8 @@ board.forEach(cell => {
     aliveNeighbors(cell.x, cell.y);
 })
 
-// aliveNeighbors(1,2)
+//aliveNeighbors(2, 3);
 module.exports = {
     liveCells, getNeighbors
+
 }
