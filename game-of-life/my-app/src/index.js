@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { liveCells ,getNeighbors} from "./grid";
+import { checkNeighbors} from "./newGrid";
 
 class Main extends React.Component {
     constructor() {
@@ -15,7 +15,7 @@ class Main extends React.Component {
     render() {
         return (
             <div className="grid">
-                {this.state.liveCells.map(c => {
+                {this.state.checkNeighbors.map(c => {
                     return <button className="grid-container">{c.status}</button>
                 })}
             </div>

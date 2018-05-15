@@ -105,3 +105,6 @@ function checkNeighbors() {
     }
 }
 checkNeighbors()
+module.exports = {
+    checkNeighbors
+}
