@@ -1,8 +1,5 @@
 <<<<<<< HEAD
 
-    body {
-=======
-body {
 >>>>>>> 1efb89e0b322bf343eb2d78ea403253ac0f2c121
         background-color: silver;
     }
@@ -126,6 +123,7 @@ body {
         background-color: orange;
         display: inline-block;
         font-size: 26px;
+<<<<<<< HEAD
     }
 </style>
 =======
