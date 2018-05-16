@@ -1,16 +1,10 @@
-<<<<<<< HEAD
 
->>>>>>> 1efb89e0b322bf343eb2d78ea403253ac0f2c121
+    body {
         background-color: silver;
     }
 
     #strictbtn {
         background-color: #4CAF50;
-<<<<<<< HEAD
-
-=======
-        /* Green */
->>>>>>> 1efb89e0b322bf343eb2d78ea403253ac0f2c121
         border: none;
 
         padding: 15px 32px;
@@ -62,11 +56,7 @@
 
 
     .yellow_dark {
-<<<<<<< HEAD
         background-color: #f9e002 !important;
-=======
-        background-color: #CCCC00 !important;
->>>>>>> 1efb89e0b322bf343eb2d78ea403253ac0f2c121
     }
 
     .yellow {
@@ -123,9 +113,5 @@
         background-color: orange;
         display: inline-block;
         font-size: 26px;
-<<<<<<< HEAD
     }
-</style>
-=======
-    }
->>>>>>> 1efb89e0b322bf343eb2d78ea403253ac0f2c121
+
