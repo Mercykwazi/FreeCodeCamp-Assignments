@@ -5,3 +5,9 @@
     background-color: #2196F3;
     padding: 10px;
 }
+#alive{
+    background-color: green;
+}
+#dead{
+    background-color: black;
+}

@@ -3,8 +3,8 @@ var alive = [
     { x: 2, y: 2, status: "alive" },
     { x: 2, y: 3, status: "alive" }
 ]
-var nextGeneration = [];
 
+var nextGeneration = [];
 function getLiveNeighbors(x, y) {
     var counter = 0;
     var actualCell = alive.find(item => {
@@ -67,7 +67,7 @@ function getLiveNeighbors(x, y) {
         nextGeneration.push({ x: x, y: y, status: "alive" });
     }
 
-    console.log("next", nextGeneration)
+    console.log(nextGeneration)
     return nextGeneration;
 
 }
@@ -98,23 +98,21 @@ function checkNeighbors() {
         return Math.min(acc, val);
     }, 2000000000000);
 
-    for (var i = minX - 1; i < maxX + 3; i++) {
-        for (var j = minY - 1; j < maxY + 3; j++) {
-            console.log(i, j)
-            getLiveNeighbors(i, j)
+    for (var i = minX - 1; i < maxX + 2; i++) {
+        for (var j = minY - 1; j < maxY + 2; j++) {
+         
+            var newGeneration = getLiveNeighbors(i, j)
         }
     }
 
+    return newGeneration
+
 }
-var setInter = () => {
-    setInterval(() => {
-        console.log("working")
-        checkNeighbors();
-    })
-}
-setInter();
-getLiveNeighbors()
-checkNeighbors()
+
+console.log(getLiveNeighbors())
+//var looper = setInterval(() => checkNeighbors(), 1000)
+//console.log('interval', looper)
+
 module.exports = {
-    getLiveNeighbors, getLiveNeighbors, nextGeneration, setInter
+    getLiveNeighbors, getLiveNeighbors
 }
