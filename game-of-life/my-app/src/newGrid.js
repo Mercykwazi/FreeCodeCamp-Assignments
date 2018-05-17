@@ -115,6 +115,3 @@ var setInter = () => {
 setInter();
 getLiveNeighbors()
 checkNeighbors()
-module.exports = {
-    getLiveNeighbors, getLiveNeighbors, nextGeneration, setInter
-}

@@ -51,3 +51,7 @@ var grid = grid();
 var makeAlive = liveCells(grid)
 var getNeighbors = getCellAndAliveNeighbors(makeAlive);
 console.log('getNeighbors', getNeighbors)
+
+module.exports = {
+    grid, liveCells, getCellAndAliveNeighbors
+}
