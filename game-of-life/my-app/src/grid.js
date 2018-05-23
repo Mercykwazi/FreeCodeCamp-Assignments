@@ -31,7 +31,7 @@ function getCellAliveNeighbourCount(board) {
         for (var i = 0; i < board.length; i++) {
             var x = board[i].x;
             var y = board[i].y;
-            var neighbors = [{ 'x': x - 1, 'y': y }, { 'x': x - 1, "y": y + 1 }, { "x": x, "y": y + 1 }, { "x": x + 1, "y": y + 1 }, { "x": x + 1, "y": y }, { "x": x + 1, "y": y - 1 }, { "x": x, " y": y - 1 }, { "x": x - 1, "y": y - 1 }];
+            var neighbors = [{ x: x - 1, y: y }, { x: x - 1, y: y + 1 }, { x: x, y: y + 1 }, { x: x + 1, y: y + 1 }, { x: x + 1, y: y }, { x: x + 1, y: y - 1 }, { x: x, y: y - 1 }, { x: x - 1, y: y - 1 }];
             var nearestNeighbor = { cell: board[i], AllNeighbors: neighbors };
             neighborsPerCell.push(nearestNeighbor);
             // console.log("ne2",neighborsPerCell[0])
@@ -46,35 +46,21 @@ function getCellAliveNeighbourCount(board) {
 
 function newGeneration(board) {
     var nextGeneration = [];
+
+
     for (var i = 0; i < board.length; i++) {
         var neighbourAliveCellsCount = getCellAliveNeighbourCount(board, board[i]);
-        console.log("what is board1", board < 0)
+        var aliveNeigbours = neighbourAliveCellsCount[i].cell.AllNeighbors;
+        for (var j = 0; j < aliveNeigbours.length; j++) {
+            var onlyAcess = [aliveNeigbours[j].x, aliveNeigbours[j].y]
+            var finder = board.find((c) => c.cell.x === onlyAcess[0] && c.cell.y === onlyAcess[1]
+        )
+            console.log("f",finder)
+        }
         
-        if (neighbourAliveCellsCount === 2 && board[i].cell.status === "alive" || neighbourAliveCellsCount === 3 && board[i].cell.status === "alive") {
-            var newCell = { ...board[i] };
-            newCell.status = "alive";
-            nextGeneration.push(newCell);
-        }
-        else if (neighbourAliveCellsCount < 2 && board[i].cell.status === "alive") {
-            var newCell = { ...board[i] };
-            newCell.status === "dead"
-            nextGeneration.push(newCell)
+       // return neighbourAliveCellsCount
 
-        }
-
-        else if (neighbourAliveCellsCount > 3 && board[i].cell.status === "alive") {
-            var newCell = { ...board[i] };
-            newCell.status === "dead"
-            nextGeneration.push(newCell)
-        }
-        else if (neighbourAliveCellsCount === 3 && board[i].cell.status === "dead") {
-            var newCell = { ...board[i] };
-            newCell.status = "alive";
-            nextGeneration.push(newCell);
-        }
     }
-    //console.log("next", nextGeneration)
-    return nextGeneration;
 }
 var grid = grid();
 var makeAlive = liveCells(grid)
@@ -84,7 +70,7 @@ var newGeneration = newGeneration(getNeighbors)
 
 
 // function initialise() {
-//     neighbors.filter(cell => cell.status === "alive")
+//     neighbors.filter
 // }
 
 
