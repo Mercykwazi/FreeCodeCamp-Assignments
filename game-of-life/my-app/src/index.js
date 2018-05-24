@@ -1,9 +1,8 @@
 
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { liveCells, getCellAndAliveNeighbors, newGeneration,initialise } from "./grid";
+import { liveCells, getCellAndAliveNeighbors, newGeneration, initialise } from "./grid";
 
 class Main extends React.Component {
     constructor() {
@@ -11,15 +10,10 @@ class Main extends React.Component {
         this.state = {
             grid: [], aliveCells: [{ x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }]
         }
-
     }
 
-componentWillMount(){
-    initialise();
-}
-
     changeBoard(cell) {
-        var newGrid = liveCells(this.state.grid, this.state.aliveCells);
+        var newGrid = liveCells(this.state.grid);
         if (cell.status === "alive") {
             newGrid[newGrid.indexOf(cell)].status = "dead"
 
@@ -46,35 +40,39 @@ componentWillMount(){
         }
         return gridOfDeadCells
     }
-    
+
     start() {
-        //var counter = 0;
+        var counter = 0;
         var generator = setInterval(() => {
             var change = liveCells(this.state.grid, this.state.aliveCells);
             var newGen = newGeneration(change);
             var onlyAlive = newGen.filter((item) => { return item.status === "alive" });
+            console.log("al", onlyAlive)
             this.setState({ grid: newGen, aliveCells: onlyAlive })
-            //counter++;
-            // if (counter === 5) {
-            //     clearInterval(generator)
-            // }
-            console.log("yes")
+            counter++;
+            if (counter === 5) {
+                clearInterval(generator)
+                console.log("yes it is working")
+            }
+
         }, 1000)
     }
     componentDidMount() {
         this.setState({ grid: this.grid() })
-
     }
 
+    clear() {
+        this.setState({ grid: [], grid: this.grid() })
+    }
 
     render() {
-        console.log('grid', this.state.grid)
         return (
             <div>
                 <div className="grid">
                     {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} id={e.status}>{e.status}</button>)}
                 </div>
                 <button onClick={() => this.start()}>start</button>
+                <button onClick={() => this.clear()}>clear</button>
             </div>
 
         )
