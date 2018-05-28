@@ -23,7 +23,7 @@ function liveCells(board, aliveCells) {
             }
         }
     }
-
+    console.log("this is the board",board)
     return board;
 }
 
@@ -77,7 +77,7 @@ function newGeneration(board) {
             nextGeneration.push(newCell)
         }
     }
-    console.log(nextGeneration)
+   // console.log(nextGeneration)
     return nextGeneration
 
 }
@@ -95,5 +95,5 @@ var newGenerations = newGeneration(makeAlive)
 
 
 module.exports = {
-    liveCells, getCellAliveNeighbourCount, newGeneration,
+    getCellAliveNeighbourCount, newGeneration,
 }

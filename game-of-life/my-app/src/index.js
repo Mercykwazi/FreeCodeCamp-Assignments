@@ -2,18 +2,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { liveCells, getCellAndAliveNeighbors, newGeneration, initialise } from "./grid";
+import { getCellAndAliveNeighbors, newGeneration, initialise } from "./grid";
 
 class Main extends React.Component {
     constructor() {
         super()
         this.state = {
-            grid: [], aliveCells: [{ x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }]
+            grid: [], aliveCells: [{ x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }], speed: 1000, pause: false, generation: 0,
         }
     }
 
     changeBoard(cell) {
-        var newGrid = liveCells(this.state.grid);
+        var newGrid = this.liveCells(this.state.grid);
         if (cell.status === "alive") {
             newGrid[newGrid.indexOf(cell)].status = "dead"
 
@@ -42,39 +42,102 @@ class Main extends React.Component {
     }
 
     start() {
-        var counter = 0;
+        var generation = this.state.generation
+        this.setState({
+            pause: false
+        })
         var generator = setInterval(() => {
-            var change = liveCells(this.state.grid, this.state.aliveCells);
+            var change = this.liveCells(this.state.grid);
             var newGen = newGeneration(change);
             var onlyAlive = newGen.filter((item) => { return item.status === "alive" });
             console.log("al", onlyAlive)
             this.setState({ grid: newGen, aliveCells: onlyAlive })
-            counter++;
-            if (counter === 5) {
+            // console.log("generation", generation)
+            this.setState({ generation: generation++ })
+            console.log("generat", generation)
+
+            if (onlyAlive.length === 0) {
                 clearInterval(generator)
-                console.log("yes it is working")
+                this.setState({ generation: 0 })
+            } else if (this.state.pause === true) {
+                clearInterval(generator, generation)
             }
 
-        }, 1000)
+        }, this.state.speed)
     }
+
+    randomPicker() {
+        var randomStorage = [];
+        var livingCells = this.state.aliveCells;
+        for (var i = 0; i < 10; i++) {
+            for (var z = 0; z < 10; z++) {
+                var random = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), status: "alive" }
+                randomStorage.push(random)
+            }
+        }
+        console.log("rad", randomStorage)
+        return randomStorage;
+    }
+
+    liveCells(aliveCells) {
+        var board = this.grid();
+        for (var i = 0; i < board.length; i++) {
+            for (var z = 0; z < aliveCells.length; z++) {
+                if (aliveCells[z].x === board[i].x && aliveCells[z].y === board[i].y) {
+                    board[i] = aliveCells[z]
+                }
+            }
+        }
+
+        return board;
+    }
+
     componentDidMount() {
-        this.setState({ grid: this.grid() })
+        var randomly = this.randomPicker()
+        this.setState({ grid: this.liveCells(randomly), aliveCells: randomly })
+        this.start()
     }
 
     clear() {
         this.setState({ grid: [], grid: this.grid() })
     }
 
+    pause() {
+        this.setState({ pause: true });
+    }
+    highSpeed() {
+        this.setState({ speed: this.state.speed - 500 })
+        this.start()
+        console.log("this is faster", this.state.speed)
+    }
+
+    lowSpeed() {
+        this.setState({ speed: this.state.speed + 300 })
+        this.start()
+        console.log("this is slower", this.state.speed)
+    }
+
     render() {
         return (
             <div>
+                <h1>Game of Life</h1>
+                <p>generation:{this.state.generation}</p>
                 <div className="grid">
-                    {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} id={e.status}>{e.status}</button>)}
-                </div>
-                <button onClick={() => this.start()}>start</button>
-                <button onClick={() => this.clear()}>clear</button>
-            </div>
 
+                    {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} key={this.state.grid.indexOf(e)} id={e.status}></button>)}
+                </div>
+                <div>
+                    <button onClick={() => this.start()}>start</button>
+                    <button onClick={() => this.clear()}>clear</button>
+                    <button onClick={() => this.pause()}>pause</button>
+                </div>
+                <div>
+                    <h2>Speed</h2>
+                    <button onClick={() => this.highSpeed()}>high</button>
+                    <button onClick={() => this.lowSpeed()}>low</button>
+
+                </div>
+            </div>
         )
     }
 }
