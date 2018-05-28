@@ -1,14 +1,19 @@
 .grid {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
-    grid-template-rows: auto auto auto auto auto auto auto auto auto auto;
-    background-color: black;
-    
-   
+    grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+    grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
-#alive{
+
+#alive {
     background-color: green;
 }
-#dead{
+
+#dead {
     background-color: gray;
+}
+
+button {
+    height: 50px;
+    width: 50px;
+    margin: 2px;
 }
