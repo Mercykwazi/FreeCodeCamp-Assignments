@@ -29,7 +29,8 @@ class ModalForEdits extends React.Component {
     render() {
         return (
             <div>
-                <Button className="button3" onClick={e => this.editRecipe(e)}>
+                 <button className="button2"  onClick={() => this.props.delete({ Name: this.props.name, Ingredients: this.props.ingredients })}>delete </button>  
+                <Button className="button3"  onClick={e => this.editRecipe(e)}>
                     Edit
         </Button>
 

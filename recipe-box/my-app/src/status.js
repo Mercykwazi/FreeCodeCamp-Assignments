@@ -23,8 +23,8 @@ export default class Status extends React.Component {
                                 })
                             }
                         </li>
-                        <button className="button2" onClick={() => this.props.delete({ Name: this.props.name, Ingredients: this.props.ingredients })}>delete </button>                      
-                       <ModalForEdits className="button2" name={this.props.name} ingredients={this.props.ingredients} replacer={this.props.replacer}/>
+                                           
+                       <ModalForEdits className="button2" name={this.props.name} ingredients={this.props.ingredients} replacer={this.props.replacer} delete={this.props.delete}/>
                         </div> : <div></div>
 
 
