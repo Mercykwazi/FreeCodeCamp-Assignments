@@ -52,7 +52,7 @@ class Main extends React.Component {
             var onlyAlive = newGen.filter((item) => { return item.status === "alive" });
             console.log("al", onlyAlive)
             this.setState({ grid: newGen, aliveCells: onlyAlive })
-            // console.log("generation", generation)
+           
             this.setState({ generation: generation++ })
             console.log("generat", generation)
 
@@ -107,12 +107,14 @@ class Main extends React.Component {
     }
     highSpeed() {
         this.setState({ speed: this.state.speed - 500 })
+        clearInterval(this.start())
         this.start()
         console.log("this is faster", this.state.speed)
     }
 
     lowSpeed() {
         this.setState({ speed: this.state.speed + 300 })
+       
         this.start()
         console.log("this is slower", this.state.speed)
     }
@@ -121,20 +123,18 @@ class Main extends React.Component {
         return (
             <div>
                 <h1>Game of Life</h1>
-                <p>generation:{this.state.generation}</p>
+                <p>Generation:{this.state.generation}</p>
+                    <button  className="btn btn-success"onClick={() => this.start()}>start</button>
+                    <button  className="btn btn-success" onClick={() => this.clear()}>clear</button>
+                    <button onClick={() => this.pause()}>pause</button>
                 <div className="grid">
-
                     {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} key={this.state.grid.indexOf(e)} id={e.status}></button>)}
                 </div>
-                <div>
-                    <button onClick={() => this.start()}>start</button>
-                    <button onClick={() => this.clear()}>clear</button>
-                    <button onClick={() => this.pause()}>pause</button>
-                </div>
+
                 <div>
                     <h2>Speed</h2>
-                    <button onClick={() => this.highSpeed()}>high</button>
-                    <button onClick={() => this.lowSpeed()}>low</button>
+                    <button   className="btn btn-success"onClick={() => this.highSpeed()}>high</button>
+                    <button  className="btn btn-success"onClick={() => this.lowSpeed()}>low</button>
 
                 </div>
             </div>

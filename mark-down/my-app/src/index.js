@@ -23,7 +23,7 @@ import Markdown from './mark';
             <div>
                 <h1 >Markdown Previewer</h1>
                 <Input changeState={this.changeState.bind(this)} />
-                <h3>Your output is below...</h3>
+                <h3><em>Your output is below...</em></h3>
                 <Markdown result={this.state.input} />
                
             </div>
