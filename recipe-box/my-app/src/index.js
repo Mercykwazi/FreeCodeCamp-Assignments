@@ -49,7 +49,7 @@ class Main extends React.Component {
     }
     replacer(oldRecipe, newRecipeName, newRecipeIng) {
         var updatedItems = { Name: newRecipeName, Ingredients: newRecipeIng };
-        var isItFound = this.state.storage
+        var isItFound = this.state.storage;
         var found = isItFound.find(function (r) { return r.Name === oldRecipe });
         var position = isItFound.indexOf(found);
         isItFound[position] = updatedItems;
