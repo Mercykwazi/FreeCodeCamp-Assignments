@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
     grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+
 }
 
 #alive {
@@ -13,7 +14,25 @@
 }
 
 button {
-    height: 50px;
-    width: 50px;
-    margin: 2px;
+    height: 70px;
+    width: 70px;
+    margin: 4px 2px;
+    /* border-radius: 10%;
+    font-size: 16px;
+    display: inline-block;
+    background-color: green; */
+    
+}
+b{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    
 }

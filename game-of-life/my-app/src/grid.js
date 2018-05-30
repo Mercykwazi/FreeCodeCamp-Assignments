@@ -1,8 +1,8 @@
 function
     grid() {
     var gridOfDeadCells = []; newGeneration
-    for (var x = 0; x < 10; x++) {
-        for (var y = 0; y < 10; y++) {
+    for (var x = 0; x < 30; x++) {
+        for (var y = 0; y < 30; y++) {
             gridOfDeadCells.push({
                 'x': x,
                 'y': y,
@@ -12,10 +12,11 @@ function
     }
     return gridOfDeadCells
 }
+var aliveCells = [
+    { x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }
+]
 
-function liveCells(board, aliveCells) {
-
-    var aliveCells = [{ x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }]
+function liveCells(board) {
     for (var i = 0; i < board.length; i++) {
         for (var z = 0; z < aliveCells.length; z++) {
             if (aliveCells[z].x === board[i].x && aliveCells[z].y === board[i].y) {
@@ -23,7 +24,6 @@ function liveCells(board, aliveCells) {
             }
         }
     }
-    console.log("this is the board",board)
     return board;
 }
 
@@ -37,12 +37,48 @@ function getCellAliveNeighbourCount(board) {
             var neighbors = [{ x: x - 1, y: y }, { x: x - 1, y: y + 1 }, { x: x, y: y + 1 }, { x: x + 1, y: y + 1 }, { x: x + 1, y: y }, { x: x + 1, y: y - 1 }, { x: x, y: y - 1 }, { x: x - 1, y: y - 1 }];
             var nearestNeighbor = { cell: board[i], AllNeighbors: neighbors };
             neighborsPerCell.push(nearestNeighbor);
-        
         }
-
         return neighborsPerCell;
     }
 }
+
+function minMax(board) {
+    var highestX = aliveCells.reduce((acc, val) => {
+        var acc = acc;
+        var val = val.x;
+        return Math.max(acc, val);
+    }, 0);
+    console.log(highestX)
+
+    var highestY = aliveCells.reduce((acc, val) => {
+        var acc = acc;
+        var val = val.y;
+        return Math.max(acc, val);
+    }, 0);
+
+    var lowestX = aliveCells.reduce((acc, val) => {
+        var acc = acc;
+        var val = val.x;
+        return Math.min(acc, val);
+    }, 0);
+    console.log(lowestX)
+
+    var lowestY = aliveCells.reduce((acc, val) => {
+        var acc = acc;
+        var val = val.y;
+        return Math.min(acc, val);
+    }, );
+
+    for (var i = lowestX - 1; i < highestX + 1; i++) {
+        for (var j = lowestY - 1; j < highestY + 1; j++) {
+            var newGeneration = getCellAliveNeighbourCount(i, j)
+        }
+    }
+    console.log("new", newGeneration)
+    return newGeneration
+
+}
+
 
 function newGeneration(board) {
     var nextGeneration = [];
@@ -77,22 +113,12 @@ function newGeneration(board) {
             nextGeneration.push(newCell)
         }
     }
-   // console.log(nextGeneration)
-    return nextGeneration
-
+    return nextGeneration;
 }
 var grid = grid();
 var makeAlive = liveCells(grid)
-//var getNeighbors = getCellAliveNeighbourCount(makeAlive);
 var newGenerations = newGeneration(makeAlive)
-
-
-
-// function initialise() {
-//     neighbors.filter
-// }
-
-
+minMax(grid)
 
 module.exports = {
     getCellAliveNeighbourCount, newGeneration,
