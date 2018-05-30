@@ -64,8 +64,7 @@ class Main extends React.Component {
         var recipe = { Name: this.state.Name, Ingredients: this.state.Ingredients, status: false };
         if (this.state.Name === undefined || this.state.Name === "") {
             alert("unable to add empty product")
-            //  } else if (recipe.Ingredients) {
-            //      alert("recipe name already exist")
+
         } else {
             var list = this.state.storage;
             list.push(recipe);
@@ -98,13 +97,3 @@ class Main extends React.Component {
 }
 const app = document.getElementById("root")
 ReactDOM.render(<Main />, app);
-// editRecipe(ingredients) {
-//     var updatedItems = prompt("please edit your Ingredients", ingredients);
-//     console.log("updated items", updatedItems)
-//     var recipeArray = this.state.storage;
-//     const recipe = recipeArray.find(function (r) { return r.Ingredients === ingredients })
-//     recipe.Ingredients = updatedItems;
-//     this.setState({ storage: recipeArray })
-//     localStorage.setItem('data', JSON.stringify(this.state.storage));
-//     console.log('recipe', this.state.storage);
-// }
