@@ -1,13 +1,14 @@
 html{
     text-align: center;
+    background-color: black;
 }
 
 .grid {
    
     display: grid;
     justify-content: center;
-    grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
-    grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+    grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+    grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
 
 }
 
@@ -18,17 +19,11 @@ html{
 #dead {
     background-color:black;
 }
-
-button {
-    height: 70px;
-    width: 70px;
-    margin: 4px 2px;
-
-    font-size: 16px;
-    display: inline-block;
-    background-color: green;
-    
+h1,h2,p{
+    color: white;
 }
+
+
 #btn {
     height: 70px;
     width: 70px;
@@ -50,8 +45,8 @@ button {
     
 }
 #btn3 {
-    /* height: 70px;
-    width: 70px; */
+    height: 70px;
+    width: 70px;
     margin: 4px 2px;
     border-radius: 10%;
     font-size: 16px;
