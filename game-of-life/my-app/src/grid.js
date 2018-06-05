@@ -42,41 +42,19 @@ function getCellAliveNeighbourCount(board) {
     }
 }
 
-function minMax(board) {
-    var highestX = aliveCells.reduce((acc, val) => {
-        var acc = acc;
-        var val = val.x;
-        return Math.max(acc, val);
-    }, 0);
-    console.log(highestX)
-
-    var highestY = aliveCells.reduce((acc, val) => {
-        var acc = acc;
-        var val = val.y;
-        return Math.max(acc, val);
-    }, 0);
-
-    var lowestX = aliveCells.reduce((acc, val) => {
-        var acc = acc;
-        var val = val.x;
-        return Math.min(acc, val);
-    }, 0);
-    console.log(lowestX)
-
-    var lowestY = aliveCells.reduce((acc, val) => {
-        var acc = acc;
-        var val = val.y;
-        return Math.min(acc, val);
-    }, );
-
-    for (var i = lowestX - 1; i < highestX + 1; i++) {
-        for (var j = lowestY - 1; j < highestY + 1; j++) {
-            var newGeneration = getCellAliveNeighbourCount(i, j)
-        }
-    }
-    console.log("new", newGeneration)
-    return newGeneration
-
+function minMax(arrayObj) {
+    var allXAxis = [];
+    var allYAxis = [];
+    arrayObj.forEach(element => {
+        allXAxis.push(element.x);
+        allYAxis.push(element.y);
+    });
+    var lowestX = allXAxis.sort((a, b) => a - b)[0];
+    var highestX = allXAxis.sort((a, b) => a - b)[allXAxis.length - 1];
+    var lowestY = allYAxis.sort((a, b) => a - b)[0];
+    var highestY = allYAxis.sort((a, b) => a - b)[allYAxis.length - 1];
+    console.log("lowest", lowestX)
+    return { lowestX: lowestX, highestX: highestX, lowestY: lowestY, highestY: highestY }
 }
 
 
@@ -118,7 +96,7 @@ function newGeneration(board) {
 var grid = grid();
 var makeAlive = liveCells(grid)
 var newGenerations = newGeneration(makeAlive)
-minMax(grid)
+minMax(aliveCells)
 
 module.exports = {
     getCellAliveNeighbourCount, newGeneration,

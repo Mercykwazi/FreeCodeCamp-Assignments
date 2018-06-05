@@ -22,7 +22,7 @@ class Main extends React.Component {
             newGrid[newGrid.indexOf(cell)].status = "alive"
 
         }
-        console.log("n", newGrid)
+      
         this.setState({ liveCells: newGrid })
         return newGrid;
 
@@ -30,8 +30,8 @@ class Main extends React.Component {
 
     grid() {
         var gridOfDeadCells = [];
-        for (var x = 0; x < 10; x++) {
-            for (var y = 0; y < 10; y++) {
+        for (var x = 0; x < 20; x++) {
+            for (var y = 0; y < 20; y++) {
                 gridOfDeadCells.push({
                     'x': x,
                     'y': y,
@@ -41,27 +41,28 @@ class Main extends React.Component {
         }
         return gridOfDeadCells
     }
+    generator = "";
 
     start() {
         var generation = this.state.generation
         this.setState({
             pause: false
         })
-        var generator = setInterval(() => {
+        this.generator = setInterval(() => {
             var change = this.liveCells(this.state.grid);
             var newGen = newGeneration(change);
             var onlyAlive = newGen.filter((item) => { return item.status === "alive" });
-            console.log("al", onlyAlive)
+         
             this.setState({ grid: newGen, aliveCells: onlyAlive })
 
             this.setState({ generation: generation++ })
-            console.log("generat", generation)
+           
 
             if (onlyAlive.length === 0) {
-                clearInterval(generator)
+                clearInterval(this.generator)
                 this.setState({ generation: 0 })
             } else if (this.state.pause === true) {
-                clearInterval(generator, generation)
+                clearInterval(this.generator, generation)
             }
 
         }, this.state.speed)
@@ -70,13 +71,13 @@ class Main extends React.Component {
     randomPicker() {
         var randomStorage = [];
         var livingCells = this.state.aliveCells;
-        for (var i = 0; i < 10; i++) {
-            for (var z = 0; z < 10; z++) {
-                var random = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), status: "alive" }
+        for (var i = 0; i < 20; i++) {
+            for (var z = 0; z < 20; z++) {
+                var random = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20), status: "alive" }
                 randomStorage.push(random)
             }
         }
-        console.log("rad", randomStorage)
+       
         return randomStorage;
     }
 
@@ -108,16 +109,14 @@ class Main extends React.Component {
     }
     highSpeed() {
         this.setState({ speed: this.state.speed - 500 })
- 
+        clearInterval(this.generator)
         this.start()
-        console.log("this is faster", this.state.speed)
     }
 
     lowSpeed() {
         this.setState({ speed: this.state.speed + 300 })
-
+        clearInterval(this.generator)
         this.start()
-        console.log("this is slower", this.state.speed)
     }
 
     render() {
@@ -126,12 +125,12 @@ class Main extends React.Component {
                 <h1>Game of Life</h1>
                 <p>Generation:{this.state.generation}</p>
                 <button id="btn3" onClick={() => this.start()}>start</button>
-                <button  id="btn2"onClick={() => this.pause()}>pause</button>
+                <button id="btn2" onClick={() => this.pause()}>pause</button>
                 <button id="btn" onClick={() => this.clear()}>clear</button>
-                
+
                 <div className="grid">
                     {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} key={this.state.grid.indexOf(e)} id={e.status}></button>)}
-                </div>
+                </div><br/>
                 <div>
                     <h2>Speed</h2>
                     <button id="btn3" onClick={() => this.highSpeed()}>high</button>
