@@ -3,17 +3,6 @@ var aliveCells = [
     { x: 2, y: 1, status: "alive" }, { x: 2, y: 2, status: "alive" }, { x: 2, y: 3, status: "alive" }
 ]
 
-function liveCells(board) {
-    for (var i = 0; i < board.length; i++) {
-        for (var z = 0; z < aliveCells.length; z++) {
-            if (aliveCells[z].x === board[i].x && aliveCells[z].y === board[i].y) {
-                board[i] = aliveCells[z]
-            }
-        }
-    }
-    return board;
-}
-
 function makeGrid(aliveCells) {
     var displayGrid = [];
     for (let index = 0; index < 20; index++) {
@@ -41,9 +30,7 @@ function getCellAliveNeighbourCount(board) {
     }
 }
 
-
 function minMax(arrayObj) {
-    // console.log("first recieved", arrayObj)
     var xCoordinates = [];
     var yCoordinates = [];
     arrayObj.forEach(element => {
@@ -62,10 +49,8 @@ function minMax(arrayObj) {
             toBeCheckedGrid.push(cellIsAlive)
         }
     }
-    // console.log("testing", toBeCheckedGrid)
     return toBeCheckedGrid
 }
-
 
 function newGeneration(board) {
     var nextGeneration = [];

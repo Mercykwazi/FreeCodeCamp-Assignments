@@ -22,7 +22,7 @@ class Main extends React.Component {
             newGrid[newGrid.indexOf(cell)] = cellFound;
 
             aliveOnly.push(cellFound);
-            console.log("only",aliveOnly)
+            console.log("only", aliveOnly)
 
         } else if (cellFound.status === "dead") {
             newGrid[newGrid.indexOf(cell)].status = "dead"
@@ -53,7 +53,6 @@ class Main extends React.Component {
         this.setState({
             pause: false
         })
-        console.log("p", this.state.pause)
         this.generator = setInterval(() => {
             var newAliveCells = newGeneration(minMax(this.state.aliveCells));
             var newGen = makeGrid(newAliveCells)
@@ -72,7 +71,7 @@ class Main extends React.Component {
         var livingCells = this.minMax
         for (var i = 0; i < 18; i++) {
             for (var z = 0; z < 18; z++) {
-                var random = { x: Math.floor(Math.random() *18 ), y: Math.floor(Math.random() * 18), status: "alive" }
+                var random = { x: Math.floor(Math.random() * 18), y: Math.floor(Math.random() * 18), status: "alive" }
                 randomStorage.push(random)
             }
         }
@@ -102,9 +101,7 @@ class Main extends React.Component {
     }
 
     pause() {
-
         this.setState({ pause: true });
-        //console.log("is this called",this.state.pause)
     }
     highSpeed() {
         this.setState({ speed: this.state.speed - 500 })
