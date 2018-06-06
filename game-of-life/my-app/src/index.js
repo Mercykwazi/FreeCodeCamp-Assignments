@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { Button } from 'reactstrap';
-import { getCellAndAliveNeighbors, newGeneration, initialise } from "./grid";
+import { getCellAndAliveNeighbors, newGeneration, minMax, makeGrid } from "./grid";
 
 class Main extends React.Component {
     constructor() {
@@ -14,16 +14,21 @@ class Main extends React.Component {
     }
 
     changeBoard(cell) {
-        var newGrid = this.liveCells(this.state.grid);
-        if (cell.status === "alive") {
+        var aliveOnly = this.state.aliveCells;
+        var newGrid = this.state.grid;
+        var cellFound = newGrid.find(item => item.x === cell.x && item.y === cell.y)
+        cellFound = cellFound.status === "alive" ? { ...cellFound, status: "dead" } : { ...cellFound, status: "alive" };
+        if (cellFound.status === "alive") {
+            newGrid[newGrid.indexOf(cell)] = cellFound;
+
+            aliveOnly.push(cellFound);
+            console.log("only",aliveOnly)
+
+        } else if (cellFound.status === "dead") {
             newGrid[newGrid.indexOf(cell)].status = "dead"
-
-        } else if (cell.status === "dead") {
-            newGrid[newGrid.indexOf(cell)].status = "alive"
-
+            aliveOnly = aliveOnly.splice(aliveOnly.indexOf(cellFound), 1)
         }
-      
-        this.setState({ liveCells: newGrid })
+        this.setState({ grid: newGrid, aliveCells: aliveOnly })
         return newGrid;
 
     }
@@ -48,36 +53,29 @@ class Main extends React.Component {
         this.setState({
             pause: false
         })
+        console.log("p", this.state.pause)
         this.generator = setInterval(() => {
-            var change = this.liveCells(this.state.grid);
-            var newGen = newGeneration(change);
-            var onlyAlive = newGen.filter((item) => { return item.status === "alive" });
-         
-            this.setState({ grid: newGen, aliveCells: onlyAlive })
-
+            var newAliveCells = newGeneration(minMax(this.state.aliveCells));
+            var newGen = makeGrid(newAliveCells)
+            this.setState({ grid: newGen, aliveCells: newAliveCells })
             this.setState({ generation: generation++ })
-           
-
-            if (onlyAlive.length === 0) {
+            if (newAliveCells.length === 0) {
                 clearInterval(this.generator)
                 this.setState({ generation: 0 })
             } else if (this.state.pause === true) {
                 clearInterval(this.generator, generation)
             }
-
         }, this.state.speed)
     }
-
     randomPicker() {
         var randomStorage = [];
-        var livingCells = this.state.aliveCells;
-        for (var i = 0; i < 20; i++) {
-            for (var z = 0; z < 20; z++) {
-                var random = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20), status: "alive" }
+        var livingCells = this.minMax
+        for (var i = 0; i < 18; i++) {
+            for (var z = 0; z < 18; z++) {
+                var random = { x: Math.floor(Math.random() *18 ), y: Math.floor(Math.random() * 18), status: "alive" }
                 randomStorage.push(random)
             }
         }
-       
         return randomStorage;
     }
 
@@ -90,7 +88,6 @@ class Main extends React.Component {
                 }
             }
         }
-
         return board;
     }
 
@@ -101,11 +98,13 @@ class Main extends React.Component {
     }
 
     clear() {
-        this.setState({ grid: [], grid: this.grid() })
+        this.setState({ grid: this.grid(), aliveCells: [] })
     }
 
     pause() {
+
         this.setState({ pause: true });
+        //console.log("is this called",this.state.pause)
     }
     highSpeed() {
         this.setState({ speed: this.state.speed - 500 })
@@ -130,7 +129,7 @@ class Main extends React.Component {
 
                 <div className="grid">
                     {this.state.grid.map(e => <button onClick={() => this.changeBoard(e)} key={this.state.grid.indexOf(e)} id={e.status}></button>)}
-                </div><br/>
+                </div><br />
                 <div>
                     <h2>Speed</h2>
                     <button id="btn3" onClick={() => this.highSpeed()}>high</button>
