@@ -4,6 +4,9 @@
 #true{
     background-color: gray;
 }
+p{
+    font-size: 35px;
+}
 
 .grid {
     display: grid;
