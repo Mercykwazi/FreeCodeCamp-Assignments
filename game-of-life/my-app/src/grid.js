@@ -30,10 +30,10 @@ function getCellAliveNeighbourCount(board) {
     }
 }
 
-function minMax(arrayObj) {
+function minMax(array) {
     var xCoordinates = [];
     var yCoordinates = [];
-    arrayObj.forEach(element => {
+    array.forEach(element => {
         xCoordinates.push(element.x);
         yCoordinates.push(element.y);
     });
@@ -44,7 +44,7 @@ function minMax(arrayObj) {
     var toBeCheckedGrid = [];
     for (var i = lowestX - 2; i < highestX + 2; i++) {
         for (var j = lowestY - 2; j < highestY + 2; j++) {
-            var cellIsAlive = arrayObj.find(element => element.x === i && element.y === j);
+            var cellIsAlive = array.find(element => element.x === i && element.y === j);
             cellIsAlive = cellIsAlive ? { ...cellIsAlive, status: "alive" } : cellIsAlive = { x: i, y: j, status: "dead" };
             toBeCheckedGrid.push(cellIsAlive)
         }
@@ -53,6 +53,7 @@ function minMax(arrayObj) {
 }
 
 function newGeneration(board) {
+    console.log("bo",board)
     var nextGeneration = [];
     for (var i = 0; i < board.length; i++) {
         var onlyAlive = [];
@@ -91,7 +92,7 @@ function newGeneration(board) {
 // var grid = grid();
 // var makeAlive = liveCells(grid)
 
-// newGeneration(minMax(aliveCells))
+ newGeneration(minMax(aliveCells))
 // makeGrid(aliveCells)
 
 

@@ -1,0 +1,13 @@
+#false {
+    background-color: silver;
+}
+#true{
+    background-color: gray;
+}
+
+.grid {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+    grid-template-rows: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+}
