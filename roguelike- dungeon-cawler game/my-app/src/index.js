@@ -8,13 +8,32 @@ class Main extends React.Component {
         super()
         this.state = {
             grid: [],
-            user: [{ lifeGriven: 50 }, { points: 0 }],
+            // user: [{ lifeGriven: 50 }, { points: 0 }],
             userLocation: { x: 5, y: 0, pathWay: true },
-            enemies: [],
-            boss: [{ potions: {} }, { points: 50 }],
-            weapons: [],
-            health: [],
+            // enemies: [],
+            // boss: [{ potions: {} }, { points: 50 }],
+            // weapons: [],
+            // health: [],
         }
+    }
+
+    creatingEnemies() {
+        var myGrid = this.grid()
+        var randomStorage = [];
+        for (var i = 0; i < 2; i++) {
+            for (var z = 0; z < 2; z++) {
+                var random = { x: Math.floor(Math.random() * 2), y: Math.floor(Math.random() * 2), occupied: "enemies" }
+                randomStorage.push(random)
+            }
+        }
+        for (var i = 0; i < randomStorage.length; i++) {
+            var found = myGrid.find(element => element.x === randomStorage[i].x && element.y === randomStorage[i].y)
+            myGrid[myGrid.indexOf(found)].occupied = "enemies";
+        }
+        this.setState({ grid: myGrid })
+        console.log("iig", myGrid)
+        return myGrid;
+
     }
 
     grid() {
@@ -24,7 +43,8 @@ class Main extends React.Component {
                 gridOfDeadCells.push({
                     'x': x,
                     'y': y,
-                    pathWay: "false"
+                    pathWay: "false",
+                    occupied: "none"
                 })
             }
         }
@@ -44,7 +64,7 @@ class Main extends React.Component {
         var userFoud = board.find(element => element.x === this.state.userLocation.x && element.y === this.state.userLocation.y)
         board[board.indexOf(userFoud)].occupied = "player";
         this.setState({ grid: board })
-        console.log("gr", board)
+
         return board;
     }
 
@@ -52,13 +72,15 @@ class Main extends React.Component {
         this.setState({ grid: this.grid() })
     }
     render() {
+        this.state.grid.map(e => { e.display = e.occupied === "enemies" ? e.display = <p>&#x263B;</p> : e.display = null })
         this.state.grid.map(e => { e.display = e.occupied === "player" ? e.display = <p>&#9641;</p> : e.display = null })
         return (
             <div >
-                <h1> roguelike dungeon-cawler game</h1>
                 <div className="grid"> {this.state.grid.map(e =>
-                    < button onClick={() => this.gridToDisplay(stages.stage1)} id={e.pathWay}>{e.display}</button>)}</div>
-                {/* <button onClick={() => this.gridToDisplay(stages.stage1)}>grid</button> */}
+                    < button onClick={() => this.grid(e)} id={e.pathWay}>{e.display}</button>)}</div>
+                <button id="btn3" onClick={() => this.gridToDisplay(stages.stage1)}>grid</button>
+                <button onClick={() => this.creatingEnemies()}>grid</button>
+
             </div >
         )
     }
