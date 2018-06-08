@@ -28,10 +28,11 @@ class Main extends React.Component {
         }
         for (var i = 0; i < randomStorage.length; i++) {
             var found = myGrid.find(element => element.x === randomStorage[i].x && element.y === randomStorage[i].y)
+
+            console.log("iig", found)
             myGrid[myGrid.indexOf(found)].occupied = "enemies";
         }
         this.setState({ grid: myGrid })
-        console.log("iig", myGrid)
         return myGrid;
 
     }
@@ -72,8 +73,14 @@ class Main extends React.Component {
         this.setState({ grid: this.grid() })
     }
     render() {
-        this.state.grid.map(e => { e.display = e.occupied === "enemies" ? e.display = <p>&#x263B;</p> : e.display = null })
-        this.state.grid.map(e => { e.display = e.occupied === "player" ? e.display = <p>&#9641;</p> : e.display = null })
+
+        this.state.grid.map(e => {
+            if (e.occupied === "enemies") {
+                e.display = <p>&#x263B;</p>;
+            } else if (e.occupied === "player") {
+                e.display = <p>&#9641;</p>;
+            }
+        })
         return (
             <div >
                 <div className="grid"> {this.state.grid.map(e =>
