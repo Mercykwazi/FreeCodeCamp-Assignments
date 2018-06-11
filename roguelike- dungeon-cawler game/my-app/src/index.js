@@ -16,6 +16,23 @@ class Main extends React.Component {
     }
 
 
+    movePlayer = (event) => {
+        var keys = this.state.userLocation;
+        if (event.key === "ArrowUp") {
+            keys = { x: keys.x - 1, y: keys.y }
+            console.log("arrowUp", keys)
+        } else if (event.key === "ArrowDown") {
+            keys = { x: keys.x + 1, y: keys.y }
+            console.log("arrowD", keys)
+        } else if (event.key === "ArrowLeft") {
+            keys = { x: keys.x, y: keys.y - 1 }
+            console.log("arrowL", keys)
+        } else if (event.key === "ArrowRight") {
+            keys = { x: keys.x, y: keys.y + 1 }
+            console.log("arrowR", keys)
+        }
+    }
+
     gridToDisplay(stage1) {
         var board = information.grid();
         for (var i = 0; i < board.length; i++) {
@@ -34,23 +51,25 @@ class Main extends React.Component {
 
     componentDidMount() {
         this.setState({ grid: this.gridToDisplay() })
+        document.onkeydown = this.movePlayer;
     }
     render() {
-        console.log("state",this.state.grid)
+        console.log("state", this.state.stage)
         this.state.grid.map(e => {
             if (e.occupied === "enemies") {
                 e.display = <p>&#x263B;</p>;
             } else if (e.occupied === "player") {
                 e.display = <p>&#9641;</p>;
-            } else if(e.occupied==="health")
-            e.display=<p>&#9749;</p>
+            } else if (e.occupied === "health")
+                e.display = <p>&#9749;</p>
         })
         return (
-            
+
             <div >
                 <div className="grid">
                     {this.state.grid.map(e =>
-                        < button id={e.pathWay}>{e.display}</button>)}
+                        < button id={e.pathWay}>{e.display}</button>
+                    )}
 
                 </div>
             </div >
