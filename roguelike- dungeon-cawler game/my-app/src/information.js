@@ -20,17 +20,21 @@ function creatingEnemies(stage1, item) {
     var userFound;
     while (i < 4 && !userFound) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
-        userFound = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y);
+        userFound = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied==="none");
         if (userFound) {
+
             userFound.occupied = item;
+            console.log("userFound", userFound)
             allItem.push(userFound)
             i++;
             userFound = undefined
         }
     }
-    console.log("userFound", allItem)
     return userFound
 }
+
+   
+  
 
 creatingEnemies(stage.stage1, "health")
 creatingEnemies(stage.stage1, "enemies")
