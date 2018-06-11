@@ -14,20 +14,27 @@ function grid() {
     return gridOfDeadCells
 }
 
-function creatingEnemies(stage1) {
-    for (var i = 0; i <= 4; i++) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "enemies" }
-        var userFoud = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y)
-        if (userFoud) {
-            userFoud.occupied = "enemies"
+function creatingEnemies(stage1, item) {
+    var i = 0;
+    var allItem = [];
+    var userFound;
+    while (i < 4 && !userFound) {
+        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
+        userFound = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y);
+        if (userFound) {
+            userFound.occupied = item;
+            allItem.push(userFound)
+            i++;
+            userFound = undefined
         }
-        console.log("stage.stage1", userFoud)
     }
-
-    return stage1
+    console.log("userFound", allItem)
+    return userFound
 }
 
-creatingEnemies(stage.stage1)
+creatingEnemies(stage.stage1, "health")
+creatingEnemies(stage.stage1, "enemies")
+
 
 module.exports = {
     grid, creatingEnemies
