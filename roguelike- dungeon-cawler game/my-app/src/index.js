@@ -36,19 +36,21 @@ class Main extends React.Component {
         this.setState({ grid: this.gridToDisplay() })
     }
     render() {
-
+        console.log("state",this.state.grid)
         this.state.grid.map(e => {
             if (e.occupied === "enemies") {
                 e.display = <p>&#x263B;</p>;
             } else if (e.occupied === "player") {
                 e.display = <p>&#9641;</p>;
-            }
+            } else if(e.occupied==="health")
+            e.display=<p>&#9749;</p>
         })
         return (
+            
             <div >
-                <div className="grid"> 
-                {this.state.grid.map(e =>
-                    < button id={e.pathWay}>{e.display}</button>)}
+                <div className="grid">
+                    {this.state.grid.map(e =>
+                        < button id={e.pathWay}>{e.display}</button>)}
 
                 </div>
             </div >
