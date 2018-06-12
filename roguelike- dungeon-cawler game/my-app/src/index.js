@@ -29,9 +29,7 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-
         this.setState({ userLocation: keys, oldUserLocation: old })
-
         this.setState({ grid: this.gridToDisplay() })
     }
 
@@ -48,12 +46,22 @@ class Main extends React.Component {
         }
         var findingOldUserLocation = board.find(element => element.x === this.state.oldUserLocation.x && element.y === this.state.oldUserLocation.y);
         var findingNewUserLocation = board.find(element => element.x === this.state.userLocation.x && element.y === this.state.userLocation.y);
-        board[board.indexOf(findingOldUserLocation)].occupied = "none";
-        board[board.indexOf(findingOldUserLocation)].display = null;
-        board[board.indexOf(findingNewUserLocation)].occupied = "player";
+        var findingAllTheItemsThatAppearInStagesAndNewLocation = stages.stage1.find(element => element.x === findingNewUserLocation.x && element.y === findingNewUserLocation.y);
+
+        if (findingAllTheItemsThatAppearInStagesAndNewLocation === undefined) {
+            this.setState({ userLocation: this.state.oldUserLocation });
+        }else{
+            board[board.indexOf(findingOldUserLocation)].occupied = "none";
+            board[board.indexOf(findingOldUserLocation)].display = null;
+            board[board.indexOf(findingNewUserLocation)].occupied = "player";
+    
+        }
+
+
+
+
+
         console.log("findingOldUserLocation", findingOldUserLocation, "findingNewUserLocation", findingNewUserLocation)
-
-
         this.setState({ grid: board })
         return board;
     }
