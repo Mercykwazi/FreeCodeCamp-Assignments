@@ -6,7 +6,7 @@ function grid() {
             gridOfDeadCells.push({
                 'x': x,
                 'y': y,
-                pathWay: "false",
+                pathWay: false,
                 occupied: "none"
             })
         }
@@ -24,7 +24,7 @@ function creatingEnemies(stage1, item) {
         if (userFound) {
 
             userFound.occupied = item;
-            console.log("userFound", userFound)
+           // console.log("userFound", userFound)
             allItem.push(userFound)
             i++;
             userFound = undefined

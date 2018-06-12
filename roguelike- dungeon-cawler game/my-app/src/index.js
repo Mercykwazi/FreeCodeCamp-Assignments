@@ -10,7 +10,8 @@ class Main extends React.Component {
         super()
         this.state = {
             grid: information.grid(),
-            userLocation: { x: 5, y: 0, pathWay: true },
+            userLocation: { x: 5, y: 0 },
+            oldUserLocation: { x: 5, y: 0 },
 
         }
     }
@@ -18,22 +19,25 @@ class Main extends React.Component {
 
     movePlayer = (event) => {
         var keys = this.state.userLocation;
+        var old = this.state.userLocation;
         if (event.key === "ArrowUp") {
             keys = { x: keys.x - 1, y: keys.y }
-            console.log("arrowUp", keys)
         } else if (event.key === "ArrowDown") {
             keys = { x: keys.x + 1, y: keys.y }
-            console.log("arrowD", keys)
         } else if (event.key === "ArrowLeft") {
             keys = { x: keys.x, y: keys.y - 1 }
-            console.log("arrowL", keys)
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
-            console.log("arrowR", keys)
         }
+
+        this.setState({ userLocation: keys, oldUserLocation: old })
+
+        this.setState({ grid: this.gridToDisplay() })
     }
 
-    gridToDisplay(stage1) {
+
+    gridToDisplay() {
+
         var board = information.grid();
         for (var i = 0; i < board.length; i++) {
             for (var z = 0; z < stages.stage1.length; z++) {
@@ -42,10 +46,15 @@ class Main extends React.Component {
                 }
             }
         }
-        var userFoud = board.find(element => element.x === this.state.userLocation.x && element.y === this.state.userLocation.y)
-        board[board.indexOf(userFoud)].occupied = "player";
-        this.setState({ grid: board })
+        var findingOldUserLocation = board.find(element => element.x === this.state.oldUserLocation.x && element.y === this.state.oldUserLocation.y);
+        var findingNewUserLocation = board.find(element => element.x === this.state.userLocation.x && element.y === this.state.userLocation.y);
+        board[board.indexOf(findingOldUserLocation)].occupied = "none";
+        board[board.indexOf(findingOldUserLocation)].display = null;
+        board[board.indexOf(findingNewUserLocation)].occupied = "player";
+        console.log("findingOldUserLocation", findingOldUserLocation, "findingNewUserLocation", findingNewUserLocation)
 
+
+        this.setState({ grid: board })
         return board;
     }
 
@@ -54,7 +63,6 @@ class Main extends React.Component {
         document.onkeydown = this.movePlayer;
     }
     render() {
-        console.log("state", this.state.stage)
         this.state.grid.map(e => {
             if (e.occupied === "enemies") {
                 e.display = <p>&#x263B;</p>;
@@ -68,7 +76,7 @@ class Main extends React.Component {
             <div >
                 <div className="grid">
                     {this.state.grid.map(e =>
-                        < button id={e.pathWay}>{e.display}</button>
+                        < button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                     )}
 
                 </div>
