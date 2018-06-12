@@ -1,10 +1,12 @@
-#false {
-    background-color: silver;
-}
-#true{
+#notPathway {
     background-color: gray;
 }
-p{
+
+#pathWay {
+    background-color: silver;
+}
+
+p {
     font-size: 35px;
 }
 

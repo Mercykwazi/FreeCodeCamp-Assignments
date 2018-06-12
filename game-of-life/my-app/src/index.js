@@ -20,10 +20,7 @@ class Main extends React.Component {
         cellFound = cellFound.status === "alive" ? { ...cellFound, status: "dead" } : { ...cellFound, status: "alive" };
         if (cellFound.status === "alive") {
             newGrid[newGrid.indexOf(cell)] = cellFound;
-
             aliveOnly.push(cellFound);
-            console.log("only", aliveOnly)
-
         } else if (cellFound.status === "dead") {
             newGrid[newGrid.indexOf(cell)].status = "dead"
             aliveOnly = aliveOnly.splice(aliveOnly.indexOf(cellFound), 1)
@@ -47,7 +44,6 @@ class Main extends React.Component {
         return gridOfDeadCells
     }
     generator = "";
-
     start() {
         var generation = this.state.generation
         this.setState({
@@ -64,7 +60,7 @@ class Main extends React.Component {
             } else if (this.state.pause === true) {
                 clearInterval(this.generator, generation)
             }
-        }, this.state.speed)
+        }, 1000)
     }
     randomPicker() {
         var randomStorage = [];
@@ -107,6 +103,7 @@ class Main extends React.Component {
         this.setState({ speed: this.state.speed - 500 })
         clearInterval(this.generator)
         this.start()
+        console.log("this is faseter", this.state.speed)
     }
 
     lowSpeed() {
