@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as stages from './stages';
-import * as information from './information'
-
+import * as information from './information';
+import Display from './display';
 
 class Main extends React.Component {
     constructor() {
@@ -12,9 +12,15 @@ class Main extends React.Component {
             grid: information.grid(),
             userLocation: { x: 5, y: 0 },
             oldUserLocation: { x: 5, y: 0 },
+            enemies: { amount: 4, life: 15 },
+            health: { amount: 4},
+            weapon: { amount: 4, life: 10 },
+            currentWeapon: { impact: 0 },
+            userLife: { life: 20 }
 
         }
     }
+
 
 
     movePlayer = (event) => {
@@ -29,45 +35,13 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        this.setState({ userLocation: keys, oldUserLocation: old })
-        this.setState({ grid: this.gridToDisplay() })
+        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.userLife.life, this.state.enemies.life, this.state.weapon.life);
+        this.setState({ grid: newGridAndLocations.newBoard, userLocation: newGridAndLocations.currentLocation, oldUserLocation: newGridAndLocations.oldLocation, userLife:{life:newGridAndLocations.playerLife}})
     }
 
-
-    gridToDisplay() {
-
-        var board = information.grid();
-        for (var i = 0; i < board.length; i++) {
-            for (var z = 0; z < stages.stage1.length; z++) {
-                if (stages.stage1[z].x === board[i].x && stages.stage1[z].y === board[i].y) {
-                    board[i] = stages.stage1[z]
-                }
-            }
-        }
-        var findingOldUserLocation = board.find(element => element.x === this.state.oldUserLocation.x && element.y === this.state.oldUserLocation.y);
-        var findingNewUserLocation = board.find(element => element.x === this.state.userLocation.x && element.y === this.state.userLocation.y);
-        var findingAllTheItemsThatAppearInStagesAndNewLocation = stages.stage1.find(element => element.x === findingNewUserLocation.x && element.y === findingNewUserLocation.y);
-
-        if (findingAllTheItemsThatAppearInStagesAndNewLocation === undefined) {
-            this.setState({ userLocation: this.state.oldUserLocation });
-        }else{
-            board[board.indexOf(findingOldUserLocation)].occupied = "none";
-            board[board.indexOf(findingOldUserLocation)].display = null;
-            board[board.indexOf(findingNewUserLocation)].occupied = "player";
-    
-        }
-
-
-
-
-
-        console.log("findingOldUserLocation", findingOldUserLocation, "findingNewUserLocation", findingNewUserLocation)
-        this.setState({ grid: board })
-        return board;
-    }
 
     componentDidMount() {
-        this.setState({ grid: this.gridToDisplay() })
+        this.setState({ grid: information.gridToDisplay(this.state.oldUserLocation, this.state.userLocation).newBoard })
         document.onkeydown = this.movePlayer;
     }
     render() {
@@ -76,18 +50,23 @@ class Main extends React.Component {
                 e.display = <p>&#x263B;</p>;
             } else if (e.occupied === "player") {
                 e.display = <p>&#9641;</p>;
-            } else if (e.occupied === "health")
+            } else if (e.occupied === "health") {
+
                 e.display = <p>&#9749;</p>
+            } else if (e.occupied === "weapon")
+                e.display = <p>&#9935;</p>
         })
         return (
 
             <div >
+                <div>
+                    <Display infor={this.state} /></div>
                 <div className="grid">
                     {this.state.grid.map(e =>
                         < button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                     )}
-
                 </div>
+
             </div >
         )
     }
