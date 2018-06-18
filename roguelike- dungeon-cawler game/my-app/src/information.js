@@ -14,7 +14,7 @@ function grid() {
     return gridOfDeadCells
 }
 
-function creatingEnemies(stage1, item) {
+function enemiesAndHealth(stage1, item) {
     var i = 0;
     var allItem = [];
     var userFound;
@@ -28,15 +28,30 @@ function creatingEnemies(stage1, item) {
             userFound = undefined
         }
     }
-    console.log("user", allItem)
+    //  console.log("user", allItem)
     return userFound
 }
-function userPoints() {
 
+function creatingWeapon() {
+    for (var i = 0; i <= 2; i++) {
+        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "weapon" }
+        var userFoud = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y)
+        if (userFoud) {
+            userFoud.occupied = "weapon"
+        }
+        console.log("The weapon is at", userFoud)
+    }
+
+    return stage.stage1
 }
 
-function gridToDisplay(oldUserLocation, userLocation, userLife, enemies, weapon, currentWeapon) {
-    var health = 10
+
+function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon) {
+    console.log("curr", enemies)
+    var health = 10;
+    var enemiesImpact = enemies;
+    var currentWeapon = weapon;
+
     var board = grid();
     var location;
     for (var i = 0; i < board.length; i++) {
@@ -58,15 +73,22 @@ function gridToDisplay(oldUserLocation, userLocation, userLife, enemies, weapon,
         theOldLocation = board[board.indexOf(findingOldUserLocation)];
         theNewLocation = board[board.indexOf(findingOldUserLocation)];
     } else {
-        if (findingNewUserLocation.occupied === "enemies" && userLife < enemies) {
-
-
-        } else if (findingNewUserLocation.occupied === "health") {
+        if (findingNewUserLocation.occupied === "health") {
             userLife = userLife + health
-            console.log("userlife", userLife)
 
-        } else if (findingNewUserLocation.occupied === "weapon")
-            currentWeapon = currentWeapon + weapon
+        } else if (findingNewUserLocation.occupied === "weapon") {
+            //console.log("this is my impact before upgrade", currentWeapon)
+            currentWeapon.impact += 20
+           // console.log("this is my impact after upgrade", currentWeapon)
+        } else if (findingNewUserLocation.occupied === "enemies") {
+
+            console.log("this is my impact before upgrade", enemiesImpact)
+            enemiesImpact.life += 15;
+            console.log("this is my impact after upgrade", enemiesImpact)
+           
+            console.log("enemiesIMpact", enemiesImpact)
+        }
+
 
         board[board.indexOf(findingOldUserLocation)].occupied = "none";
         board[board.indexOf(findingOldUserLocation)].display = null;
@@ -76,18 +98,17 @@ function gridToDisplay(oldUserLocation, userLocation, userLife, enemies, weapon,
 
 
     }
-    console.log("findingOldUserLocation", theOldLocation, "findingNewUserLocation", theNewLocation)
-    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: userLife };
+    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: userLife, weaponOnHand: currentWeapon, impactOfEnemies: enemiesImpact };
 }
 
 
 
 
-creatingEnemies(stage.stage1, "health")
-creatingEnemies(stage.stage1, "enemies")
-creatingEnemies(stage.stage1, "weapon")
+enemiesAndHealth(stage.stage1, "health")
+enemiesAndHealth(stage.stage1, "enemies")
+creatingWeapon(stage.stage1, "weapon")
 
 
 module.exports = {
-    grid, creatingEnemies, gridToDisplay
+    grid, enemiesAndHealth, gridToDisplay
 }

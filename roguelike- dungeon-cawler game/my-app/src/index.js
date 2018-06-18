@@ -12,9 +12,9 @@ class Main extends React.Component {
             grid: information.grid(),
             userLocation: { x: 5, y: 0 },
             oldUserLocation: { x: 5, y: 0 },
-            enemies: { amount: 4, life: 15 },
-            health: { amount: 4},
-            weapon: { amount: 4, life: 10 },
+            enemies: { amount: 4, life: 0 },
+            health: { amount: 4 },
+           AmountOfWeapons: { amount: 2, },
             currentWeapon: { impact: 0 },
             userLife: { life: 20 }
 
@@ -35,8 +35,9 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.userLife.life, this.state.enemies.life, this.state.weapon.life);
-        this.setState({ grid: newGridAndLocations.newBoard, userLocation: newGridAndLocations.currentLocation, oldUserLocation: newGridAndLocations.oldLocation, userLife:{life:newGridAndLocations.playerLife}})
+        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.userLife.life, this.state.enemies,this.state.currentWeapon        );
+        this.setState({ grid: newGridAndLocations.newBoard, userLocation: newGridAndLocations.currentLocation, oldUserLocation: newGridAndLocations.oldLocation, userLife: { life: newGridAndLocations.playerLife }, currentWeapon: newGridAndLocations.weaponOnHand ,enemies:newGridAndLocations.impactOfEnemies })
+      console.log("user", this.state.c)
     }
 
 
