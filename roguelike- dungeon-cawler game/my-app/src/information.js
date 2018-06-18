@@ -77,16 +77,13 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon)
             userLife = userLife + health
 
         } else if (findingNewUserLocation.occupied === "weapon") {
-            //console.log("this is my impact before upgrade", currentWeapon)
             currentWeapon.impact += 20
-           // console.log("this is my impact after upgrade", currentWeapon)
         } else if (findingNewUserLocation.occupied === "enemies") {
 
-            console.log("this is my impact before upgrade", enemiesImpact)
+            console.log("this is enemy impact before artack", enemiesImpact)
             enemiesImpact.life += 15;
-            console.log("this is my impact after upgrade", enemiesImpact)
-           
-            console.log("enemiesIMpact", enemiesImpact)
+            console.log("this is enemy impact after uartack", enemiesImpact)
+
         }
 
 
