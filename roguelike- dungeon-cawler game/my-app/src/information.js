@@ -39,7 +39,7 @@ function creatingWeapon() {
         if (userFoud) {
             userFoud.occupied = "weapon"
         }
-        console.log("The weapon is at", userFoud)
+        // console.log("The weapon is at", userFoud)
     }
 
     return stage.stage1
@@ -47,8 +47,7 @@ function creatingWeapon() {
 
 
 function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon) {
-    console.log("curr", enemies)
-    var health = 10;
+    var health = 30;
     var enemiesImpact = enemies;
     var currentWeapon = weapon;
 
@@ -78,20 +77,28 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon)
 
         } else if (findingNewUserLocation.occupied === "weapon") {
             currentWeapon.impact += 20
-        } else if (findingNewUserLocation.occupied === "enemies") {
-
-            console.log("this is enemy impact before artack", enemiesImpact)
-            enemiesImpact.life += 15;
-            console.log("this is enemy impact after uartack", enemiesImpact)
 
         }
 
+        if (findingNewUserLocation.occupied === "enemies") {
+            enemiesImpact.life = 50;
+            console.log("finding", userLife, enemiesImpact.life)
 
-        board[board.indexOf(findingOldUserLocation)].occupied = "none";
-        board[board.indexOf(findingOldUserLocation)].display = null;
-        board[board.indexOf(findingNewUserLocation)].occupied = "player";
-        theOldLocation = board[board.indexOf(findingOldUserLocation)];
-        theNewLocation = board[board.indexOf(findingNewUserLocation)];
+            if (enemiesImpact.life < userLife) {
+                board[board.indexOf(findingOldUserLocation)].occupied = "none";
+                board[board.indexOf(findingOldUserLocation)].display = null;
+                board[board.indexOf(findingNewUserLocation)].occupied = "player";
+                theOldLocation = board[board.indexOf(findingOldUserLocation)];
+                theNewLocation = board[board.indexOf(findingOldUserLocation)];
+            }
+        } else {
+            board[board.indexOf(findingOldUserLocation)].occupied = "none";
+            board[board.indexOf(findingOldUserLocation)].display = null;
+            board[board.indexOf(findingNewUserLocation)].occupied = "player";
+            theOldLocation = board[board.indexOf(findingOldUserLocation)];
+            theNewLocation = board[board.indexOf(findingNewUserLocation)];
+        }
+
 
 
     }
