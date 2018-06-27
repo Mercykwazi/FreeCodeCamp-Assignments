@@ -10,18 +10,16 @@ class Main extends React.Component {
         super()
         this.state = {
             grid: information.grid(),
-            userLocation: { x: 5, y: 0 },
-            oldUserLocation: { x: 5, y: 0 },
+            userLocation: { x: 6, y: 1 },
+            oldUserLocation: { x: 6, y: 1 },
             enemies: { amount: 4, life: 0 },
             health: { amount: 4 },
-            AmountOfWeapons: { amount: 2, },
-            currentWeapon: { impact: 0 },
+            weapons: [{ name: 'knive', damage: 15, image: <p> &#9760;</p> }, { name: 'spear', damage: 19, image: <p>&#9935;</p> }, { name: ' pistol', damage: 26, image: <p> &#9755;</p> }],
+            currentWeapon: { damage: 0 },
             userLife: { life: 20 }
 
         }
     }
-
-
 
     movePlayer = (event) => {
         var keys = this.state.userLocation;
@@ -35,9 +33,9 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.enemies, this.state.userLife.life, this.state.currentWeapon);
+        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.enemies, this.state.userLife.life, this.state.weapons);
         this.setState({ grid: newGridAndLocations.newBoard, userLocation: newGridAndLocations.currentLocation, oldUserLocation: newGridAndLocations.oldLocation, userLife: { life: newGridAndLocations.playerLife }, currentWeapon: newGridAndLocations.weaponOnHand, enemies: newGridAndLocations.impactOfEnemies })
-        console.log("user", this.state.c)
+      //  console.log("user", this.state.c)
     }
 
 
@@ -47,6 +45,7 @@ class Main extends React.Component {
     }
     render() {
         this.state.grid.map(e => {
+           // console.log("this is the value of e", e)
             if (e.occupied === "enemies") {
                 e.display = <p>&#x263B;</p>;
             } else if (e.occupied === "player") {

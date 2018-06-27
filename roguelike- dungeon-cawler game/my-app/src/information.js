@@ -28,16 +28,22 @@ function enemiesAndHealth(stage1, item) {
             userFound = undefined
         }
     }
-    //  console.log("user", allItem)
     return userFound
 }
 
+
+
+const objectTypes = { ENEMY: "enemies", WEAPON: "weapon", HEALTH: "health" }
+
 function creatingWeapon() {
-    for (var i = 0; i <= 2; i++) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "weapon" }
+
+    for (var i = 0; i < 2; i++) {
+        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: objectTypes.WEAPON }
         var userFoud = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y)
         if (userFoud) {
-            userFoud.occupied = "weapon"
+
+            userFoud.occupied = objectTypes.WEAPON;
+           
         }
         // console.log("The weapon is at", userFoud)
     }
@@ -46,11 +52,11 @@ function creatingWeapon() {
 }
 
 
-function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon) {
+function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapons) {
     var health = 30;
     var enemiesImpact = enemies;
-    var currentWeapon = weapon;
-
+    var currentWeapon = weapons;
+    var newLife = userLife;
     var board = grid();
     var location;
     for (var i = 0; i < board.length; i++) {
@@ -72,24 +78,38 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon)
         theOldLocation = board[board.indexOf(findingOldUserLocation)];
         theNewLocation = board[board.indexOf(findingOldUserLocation)];
     } else {
-        if (findingNewUserLocation.occupied === "health") {
-            userLife = userLife + health
+        if (findingNewUserLocation.occupied === objectTypes.HEALTH) {
+            newLife = userLife + health
 
-        } else if (findingNewUserLocation.occupied === "weapon") {
-            currentWeapon.impact += 20
+        } else if (findingNewUserLocation.occupied === objectTypes.WEAPON) {
+    console.log("weapons", currentWeapon[2])
+            
+            // console.log("what", currentWeapon)
+        //     if (currentWeapon[0].name === 'knive') {
+        //         currentWeapon.damage += 15;
+        //         //  console.log("is this found",currentWeapon.damage)
 
+
+        //     } else if (currentWeapon[1].name === 'spear')
+        //         currentWeapon.damage += 19;
+        // } else if (currentWeapon[2].name === 'pistol') {
+        //     currentWeapon.damage += 26
+
+        //     console.log("type of weapon is ", objectTypes.WEAPON)
         }
 
-        if (findingNewUserLocation.occupied === "enemies") {
-            enemiesImpact.life = 50;
-            console.log("finding", userLife, enemiesImpact.life)
-
+        if (findingNewUserLocation.occupied === objectTypes.ENEMY) {
+            enemiesImpact.life = 40;
             if (enemiesImpact.life < userLife) {
                 board[board.indexOf(findingOldUserLocation)].occupied = "none";
                 board[board.indexOf(findingOldUserLocation)].display = null;
                 board[board.indexOf(findingNewUserLocation)].occupied = "player";
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
+                enemiesImpact.life = enemiesImpact.life - 20
+
+            } else if (enemiesImpact.life > userLife) {
+                newLife = userLife - 10;
             }
         } else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -98,19 +118,16 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapon)
             theOldLocation = board[board.indexOf(findingOldUserLocation)];
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
-
-
-
     }
-    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: userLife, weaponOnHand: currentWeapon, impactOfEnemies: enemiesImpact };
+    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, weaponOnHand: currentWeapon, impactOfEnemies: enemiesImpact };
 }
 
 
 
 
-enemiesAndHealth(stage.stage1, "health")
-enemiesAndHealth(stage.stage1, "enemies")
-creatingWeapon(stage.stage1, "weapon")
+enemiesAndHealth(stage.stage1, objectTypes.HEALTH)
+enemiesAndHealth(stage.stage1, objectTypes.ENEMY)
+creatingWeapon(stage.stage1, objectTypes.WEAPON)
 
 
 module.exports = {
