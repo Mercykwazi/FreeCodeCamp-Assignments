@@ -20,15 +20,17 @@ function enemiesAndHealth(stage1, item) {
     var userFound;
     while (i < 4 && !userFound) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
-        userFound = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
+        userFound = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y);
+       // console.log("userFound", userFound)
         if (userFound) {
             userFound.occupied = item;
             allItem.push(userFound)
             i++;
             userFound = undefined
         }
+
     }
-    return userFound
+    return allItem
 }
 
 
@@ -40,15 +42,9 @@ function creatingWeapon() {
     for (var i = 0; i < 2; i++) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: objectTypes.WEAPON }
         var userFoud = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y)
-        if (userFoud) {
-
-            userFoud.occupied = objectTypes.WEAPON;
-           
-        }
-        // console.log("The weapon is at", userFoud)
     }
-
-    return stage.stage1
+    console.log("user", userFoud)
+    return userFoud
 }
 
 
@@ -82,20 +78,26 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapons
             newLife = userLife + health
 
         } else if (findingNewUserLocation.occupied === objectTypes.WEAPON) {
-    console.log("weapons", currentWeapon[2])
-            
+            currentWeapon.forEach(currentItem => {
+                var foundWeapon = board.find(item => {
+                    console.log("board", foundWeapon)
+                    return item.x === currentItem && item.y === currentItem.y
+                })
+            })
+
+
             // console.log("what", currentWeapon)
-        //     if (currentWeapon[0].name === 'knive') {
-        //         currentWeapon.damage += 15;
-        //         //  console.log("is this found",currentWeapon.damage)
+            //     if (currentWeapon[0].name === 'knive') {
+            //         currentWeapon.damage += 15;
+            //         //  console.log("is this found",currentWeapon.damage)
 
 
-        //     } else if (currentWeapon[1].name === 'spear')
-        //         currentWeapon.damage += 19;
-        // } else if (currentWeapon[2].name === 'pistol') {
-        //     currentWeapon.damage += 26
+            //     } else if (currentWeapon[1].name === 'spear')
+            //         currentWeapon.damage += 19;
+            // } else if (currentWeapon[2].name === 'pistol') {
+            //     currentWeapon.damage += 26
 
-        //     console.log("type of weapon is ", objectTypes.WEAPON)
+            //     console.log("type of weapon is ", objectTypes.WEAPON)
         }
 
         if (findingNewUserLocation.occupied === objectTypes.ENEMY) {
@@ -125,11 +127,11 @@ function gridToDisplay(oldUserLocation, userLocation, enemies, userLife, weapons
 
 
 
-enemiesAndHealth(stage.stage1, objectTypes.HEALTH)
-enemiesAndHealth(stage.stage1, objectTypes.ENEMY)
+enemiesAndHealth(stage.stage1, "health")
+enemiesAndHealth(stage.stage1, "enemies")
 creatingWeapon(stage.stage1, objectTypes.WEAPON)
 
 
 module.exports = {
-    grid, enemiesAndHealth, gridToDisplay
+    grid, enemiesAndHealth, gridToDisplay, creatingWeapon
 }
