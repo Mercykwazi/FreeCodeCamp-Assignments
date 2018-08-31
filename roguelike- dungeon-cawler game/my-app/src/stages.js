@@ -1,7 +1,4 @@
 const stage1 = [
-  //  { x: 0, y: 4, pathWay: true, occupied: "none" },
-   // { x: 0, y: 7, pathWay: true, occupied: "none" },
-  //  { x: 1, y: 0, pathWay: true, occupied: "none" },
     { x: 1, y: 1, pathWay: true, occupied: "none" },
     { x: 1, y: 2, pathWay: true, occupied: "none" },
     { x: 1, y: 3, pathWay: true, occupied: "none" },
@@ -17,7 +14,6 @@ const stage1 = [
     { x: 2, y: 10, pathWay: true, occupied: "none" },
    { x: 3, y: 1, pathWay: true, occupied: "none" },
     { x: 3, y: 2, pathWay: true, occupied: "none" },
-  //  { x: 3, y: 4, pathWay: true, occupied: "none" },
     { x: 3, y: 6, pathWay: true, occupied: "none" },
     { x: 3, y: 7, pathWay: true, occupied: "none" },
     { x: 3, y: 10, pathWay: true, occupied: "none" },

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import * as stages from './stages';
 import * as information from './information';
 import Display from './display';
 
@@ -12,16 +11,25 @@ class Main extends React.Component {
             grid: information.grid(),
             userLocation: { x: 6, y: 1 },
             oldUserLocation: { x: 6, y: 1 },
-            enemies: { amount: 4, life: 0 },
-            health: { amount: 4 },
+            enemies: [],
+            health: [],
             weapons: [{ name: 'knive', damage: 15, image: <p> &#9760;</p> }, { name: 'spear', damage: 19, image: <p>&#9935;</p> }, { name: ' pistol', damage: 26, image: <p> &#9755;</p> }],
-            currentWeapon: { damage: 0 },
             userLife: { life: 20 }
 
         }
     }
+    componentDidMount() {
+        document.onkeydown = this.moveKeys;
+        var eAndH = information.enemiesAndHealth();
+        this.setState({
+            enemies: eAndH.enemySet,
+            health: eAndH.healthSet,
+            grid: information.movePlayer(this.state.oldUserLocation, this.state.userLocation).newBoard
+        })
+    }
 
-    movePlayer = (event) => {
+    moveKeys = (event) => {
+        console.log("just loaded")
         var keys = this.state.userLocation;
         var old = this.state.userLocation;
         if (event.key === "ArrowUp") {
@@ -33,37 +41,30 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        var newGridAndLocations = information.gridToDisplay(old, keys, this.state.enemies, this.state.userLife.life, this.state.weapons);
-        this.setState({ grid: newGridAndLocations.newBoard, userLocation: newGridAndLocations.currentLocation, oldUserLocation: newGridAndLocations.oldLocation, userLife: { life: newGridAndLocations.playerLife }, currentWeapon: newGridAndLocations.weaponOnHand, enemies: newGridAndLocations.impactOfEnemies })
-      //  console.log("user", this.state.c)
+        var newGridAndLocations = information.movePlayer(old, keys);
+        this.setState({ userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: this.state.enemies })
+
     }
 
 
-    componentDidMount() {
-        this.setState({ grid: information.gridToDisplay(this.state.oldUserLocation, this.state.userLocation).newBoard })
-        document.onkeydown = this.movePlayer;
-    }
+
     render() {
-        this.state.grid.map(e => {
-           // console.log("this is the value of e", e)
-            if (e.occupied === "enemies") {
-                e.display = <p>&#x263B;</p>;
-            } else if (e.occupied === "player") {
-                e.display = <p>&#9641;</p>;
-            } else if (e.occupied === "health") {
-
-                e.display = <p>&#9749;</p>
-            } else if (e.occupied === "weapon")
-                e.display = <p>&#9935;</p>
-        })
         return (
-
             <div >
-                <div>
-                    <Display infor={this.state} /></div>
+                <h1> Dangeon Crawler</h1>
                 <div className="grid">
-                    {this.state.grid.map(e =>
-                        < button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
+                    {this.state.grid.map(e => {
+                        if (e.occupied === "Enemies") {
+                            e.display = <p>&#x263B;</p>
+                        } else if (e.occupied === "Health") {
+                            e.display = <p>&#9749;</p>
+                        } else if (e.occupied === "player") {
+                            e.display = <p>&#9641;</p>;
+                        }
+                        return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
+                    }
+
+
                     )}
                 </div>
 
@@ -73,3 +74,5 @@ class Main extends React.Component {
 }
 const app = document.getElementById("root")
 ReactDOM.render(<Main />, app);
+
+

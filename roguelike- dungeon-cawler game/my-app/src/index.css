@@ -1,9 +1,13 @@
 #notPathway {
     background-color: gray;
+    font-size: 55px
 }
-
+h1{
+    text-align: center;
+}
 #pathWay {
     background-color: silver;
+    font-size: 55px
 }
 
 p {
