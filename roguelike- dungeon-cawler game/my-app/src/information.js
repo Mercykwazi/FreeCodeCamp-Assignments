@@ -14,7 +14,6 @@ function grid() {
     return wholeGrid;
 }
 function weapon() {
-    console.log("is this function ever called?")
     var userFound = {};
     for (var i = 0; i < 1; i++) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "weapon" }
@@ -25,12 +24,13 @@ function weapon() {
     return userFound
 }
 
-function movePlayer(oldUserLocation, userLocation, userLife, enemies) {
+function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
     var board = grid();
     var enemiesImpact = enemies;
     var newLife = userLife;
     var health = 30;
     var enemies = 25
+    var currentWeapon = weapons
     var location;
     for (var i = 0; i < board.length; i++) {
         for (var z = 0; z < stage.stage1.length; z++) {
@@ -76,6 +76,16 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies) {
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
             }
 
+        }  else if (findingNewUserLocation.occupied === "weapon") {
+            console.log("the weapon is found")
+            console.log("the weapon is found",currentWeapon)
+            
+            currentWeapon.forEach(weapon => {
+                var foundWeapon = board.find(item => {
+                    console.log("board", foundWeapon)
+                    return item.x === weapon && item.y === weapon.y
+                })
+            })
         }
         else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -85,7 +95,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies) {
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
     }
-    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact };
+    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact,impactOfWeapons:currentWeapon };
 
 }
 
