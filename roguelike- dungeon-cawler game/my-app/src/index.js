@@ -11,7 +11,7 @@ class Main extends React.Component {
             grid: information.grid(),
             userLocation: { x: 6, y: 1 },
             oldUserLocation: { x: 6, y: 1 },
-            enemies: [],
+            enemies: {life:20},
             health: [],
             weapons: [{ name: 'knive', damage: 15, image: <p> &#9760;</p> }, { name: 'spear', damage: 19, image: <p>&#9935;</p> }, { name: ' pistol', damage: 26, image: <p> &#9755;</p> }],
             userLife: { life: 20 }
@@ -20,16 +20,17 @@ class Main extends React.Component {
     }
     componentDidMount() {
         document.onkeydown = this.moveKeys;
-        var eAndH = information.enemiesAndHealth();
+        var enemieAndHealth = information.enemiesAndHealth();
+        var creatingWeapons=information.weapon()
         this.setState({
-            enemies: eAndH.enemySet,
-            health: eAndH.healthSet,
-            grid: information.movePlayer(this.state.oldUserLocation, this.state.userLocation).newBoard
+            enemies:enemieAndHealth.enemySet,
+            health:enemieAndHealth.healthSet,
+            weapons:creatingWeapons,
+            grid: information.movePlayer(this.state.oldUserLocation, this.state.userLocation,this.state.userLife.life).newBoard
         })
     }
 
     moveKeys = (event) => {
-        console.log("just loaded")
         var keys = this.state.userLocation;
         var old = this.state.userLocation;
         if (event.key === "ArrowUp") {
@@ -41,14 +42,16 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        var newGridAndLocations = information.movePlayer(old, keys);
-        this.setState({ userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: this.state.enemies })
+        var newGridAndLocations = information.movePlayer(old, keys,this.state.userLife.life,this.state.enemies);
+        this.setState({ userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation,  enemies: newGridAndLocations.impactOfEnemies ,userLife: { life: newGridAndLocations.playerLife } })
 
     }
 
 
 
     render() {
+        console.log("state",this.state);
+        
         return (
             <div >
                 <h1> Dangeon Crawler</h1>
@@ -60,6 +63,8 @@ class Main extends React.Component {
                             e.display = <p>&#9749;</p>
                         } else if (e.occupied === "player") {
                             e.display = <p>&#9641;</p>;
+                        }  else if (e.occupied === "weapon"){
+                               e.display = <p>&#9935;</p>
                         }
                         return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                     }
