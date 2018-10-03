@@ -22,10 +22,8 @@ class Main extends React.Component {
             userLife: { life: 20 }
 
         }
-    }   // componentWillUpdate() {
-        //     console.log("when is it called?");
+    }   
     
-        // }
     componentDidMount() {
         document.onkeydown = this.moveKeys;
         var results = information.stage1()
