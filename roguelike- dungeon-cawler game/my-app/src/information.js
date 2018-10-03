@@ -13,18 +13,53 @@ function grid() {
     }
     return wholeGrid;
 }
-function weapon() {
-    var userFound = {};
+function weapon(stage) {
     for (var i = 0; i < 1; i++) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "weapon" }
-        var findLocation = stage.stage1.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
-        findLocation ? findLocation.occupied = "weapon" : weapon();
-        userFound = findLocation;
+        var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
+        while (!findLocation) {
+            findLocation = weapon(stage);
+        }
+        findLocation.occupied = "weapon";
+        return { ...findLocation }
+
     }
-    return userFound
 }
 
-function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
+function door(stage) {
+    for (var i = 0; i < 1; i++) {
+        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "door" }
+        var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
+        while (!findLocation) {
+            findLocation = door(stage);
+        }
+        findLocation.occupied = "door";
+        return { ...findLocation }
+    }
+}
+
+function stage1() {
+    var doorCreated = door(stage.stage1)
+    var weaponCreated = weapon(stage.stage1);
+    var enemiesAndHealthCreated = enemiesAndHealth(stage.stage1);
+    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, gridOfFirstStage: stage.stage1 };
+}
+
+function stage2() {
+    var doorCreated = door(stage.stage2)
+    var weaponCreated = weapon(stage.stage2);
+    var enemiesAndHealthCreated = enemiesAndHealth(stage.stage2);
+    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, gridOfSecondStage: stage.stage2 };
+}
+
+function stage3() {
+    var doorCreated = door(stage.stage3)
+    var weaponCreated = weapon(stage.stage3);
+    var enemiesAndHealthCreated = enemiesAndHealth(stage.stage3);
+    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, gridOfThirdStage: stage.stage3 };
+}
+
+function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage) {
     var board = grid();
     var enemiesImpact = enemies;
     var newLife = userLife;
@@ -33,9 +68,9 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
     var currentWeapon = weapons
     var location;
     for (var i = 0; i < board.length; i++) {
-        for (var z = 0; z < stage.stage1.length; z++) {
-            if (stage.stage1[z].x === board[i].x && stage.stage1[z].y === board[i].y) {
-                board[i] = stage.stage1[z]
+        for (var z = 0; z < stage.length; z++) {
+            if (stage[z].x === board[i].x && stage[z].y === board[i].y) {
+                board[i] = stage[z]
             }
         }
     }
@@ -43,7 +78,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
     var theNewLocation = {};
     var findingOldUserLocation = board.find(element => element.x === oldUserLocation.x && element.y === oldUserLocation.y);
     var findingNewUserLocation = board.find(element => element.x === userLocation.x && element.y === userLocation.y);
-    var findingAllTheItemsThatAppearInStagesAndNewLocation = stage.stage1.find(element => element.x === findingNewUserLocation.x && element.y === findingNewUserLocation.y);
+    var findingAllTheItemsThatAppearInStagesAndNewLocation = stage.find(element => element.x === findingNewUserLocation.x && element.y === findingNewUserLocation.y);
 
     if (findingAllTheItemsThatAppearInStagesAndNewLocation === undefined) {
         board[board.indexOf(findingOldUserLocation)].occupied = "player";
@@ -76,16 +111,19 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
             }
 
-        }  else if (findingNewUserLocation.occupied === "weapon") {
-            console.log("the weapon is found")
-            console.log("the weapon is found",currentWeapon)
-            
-            currentWeapon.forEach(weapon => {
-                var foundWeapon = board.find(item => {
-                    console.log("board", foundWeapon)
-                    return item.x === weapon && item.y === weapon.y
-                })
-            })
+        } else if (findingNewUserLocation.occupied === "weapon") {
+            newLife = userLife + 40;
+            board[board.indexOf(findingOldUserLocation)].occupied = "none";
+            board[board.indexOf(findingOldUserLocation)].display = null;
+            board[board.indexOf(findingNewUserLocation)].occupied = "player";
+            theOldLocation = board[board.indexOf(findingOldUserLocation)];
+            theNewLocation = board[board.indexOf(findingNewUserLocation)];
+        } else if (findingNewUserLocation.occupied === "door") {
+            board[board.indexOf(findingOldUserLocation)].occupied = "none";
+            board[board.indexOf(findingOldUserLocation)].display = null;
+            board[board.indexOf(findingNewUserLocation)].occupied = "player";
+            theOldLocation = board[board.indexOf(findingOldUserLocation)];
+            theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
         else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -95,12 +133,12 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons) {
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
     }
-    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact,impactOfWeapons:currentWeapon };
+    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon };
 
 }
 
-function enemiesAndHealth() {
-    var grid = stage.stage1;
+function enemiesAndHealth(stage) {
+    var grid = stage
     var i = 0;
     var enemies = [];
     var health = [];
@@ -109,8 +147,6 @@ function enemiesAndHealth() {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
         var position = grid.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
         found = i <= 3 ? "Enemies" : "Health";
-
-
         if (position) {
             if (i <= 3) {
                 position.occupied = found;
@@ -129,7 +165,6 @@ function enemiesAndHealth() {
     return { healthSet: health, enemySet: enemies }
 }
 
-
 module.exports = {
-    grid, movePlayer, enemiesAndHealth, weapon
+    grid, movePlayer, weapon, stage1
 }
