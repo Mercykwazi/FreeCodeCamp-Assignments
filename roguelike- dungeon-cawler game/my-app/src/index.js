@@ -19,28 +19,29 @@ class Main extends React.Component {
             currentStageNum: 1,
             health: [],
             weapons: [{ name: 'knive', damage: 15, image: <p> &#9760;</p> }, { name: 'spear', damage: 19, image: <p>&#9935;</p> }, { name: ' pistol', damage: 26, image: <p> &#9755;</p> }],
+            currentWeapon: {},
             userLife: { life: 20 }
 
         }
-    }   
-    
+    }
+
     componentDidMount() {
         document.onkeydown = this.moveKeys;
         var results = information.stage1()
         var enemieAndHealth = results.enemiesAndHealth;
         var creatingWeapons = results.weapon;
         var door = results.door;
-        var firstStage = results.gridOfFirstStage
+        var firstStage = results.gridOfFirstStage;
+        var gridSet = information.movePlayer(this.state.oldUserLocation, this.state.userLocation, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, firstStage, this.state.currentStageNum);
         this.setState({
-            enemies: enemieAndHealth,
-            health: enemieAndHealth,
+            enemies: enemieAndHealth.enemySet,
+            health: enemieAndHealth.healthSet,
             weapons: creatingWeapons,
             currentStage: firstStage,
-            grid: information.movePlayer(this.state.oldUserLocation, this.state.userLocation, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door,firstStage).newBoard
+            grid: gridSet.newBoard,
+            currentStageNum: gridSet.newStageNum
         })
     }
-
-
     moveKeys = (event) => {
         var keys = this.state.userLocation;
         var old = this.state.userLocation;
@@ -53,17 +54,24 @@ class Main extends React.Component {
         } else if (event.key === "ArrowRight") {
             keys = { x: keys.x, y: keys.y + 1 }
         }
-        var newGridAndLocations = information.movePlayer(old, keys, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, this.state.currentStage);
-        this.setState({ userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: newGridAndLocations.impactOfEnemies, userLife: { life: newGridAndLocations.playerLife }, weapons: newGridAndLocations.impactOfWeapons, door: this.state.door})
+        var newGridAndLocations = information.movePlayer(old, keys, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, this.state.currentStage, this.state.currentStageNum);
+        if (newGridAndLocations.newBoard === "new board") {
+            var innialGrid = this.state.grid;
+            var newGrid = information.changeStages(this.state.currentStageNum + 1, this.state.userLocation);
+            console.log("newGrid", newGrid.theResults.grid);
+            var boardCreated = information.createGrid(newGrid.theResults.grid);
+            console.log("boardCreated", boardCreated);
+            this.setState({ currentStageNum: this.state.currentStageNum + 1, currentStage: boardCreated, grid: boardCreated, userLocation: newGrid.currentLocation, door: newGrid.theResults.door, currentWeapon: newGrid.theResults.weapon, enemies: newGrid.theResults.enemiesAndHealth.enemySet, health: newGrid.theResults.enemiesAndHealth.healthSet });
+        } else {
+            this.setState({ currentStageNum: newGridAndLocations.newStageNum, userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: newGridAndLocations.impactOfEnemies, userLife: { life: newGridAndLocations.playerLife }, weapons: newGridAndLocations.impactOfWeapons, door: this.state.door })
+        }
     }
 
     render() {
-        console.log("all the stages in state",this.state.AllStages);
-        
-        return (
+  return (
             <div >
                 <h1> Dangeon Crawler</h1>
-                <h2>Health:{this.state.userLife.life}</h2>
+                <h2>XP:{this.state.userLife.life}</h2>
                 <div className="grid">
                     {this.state.grid.map(e => {
                         if (e.occupied === "Enemies") {
@@ -79,11 +87,8 @@ class Main extends React.Component {
                         }
                         return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                     }
-
-
                     )}
                 </div>
-
             </div >
         )
     }
