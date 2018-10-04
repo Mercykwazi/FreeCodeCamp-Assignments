@@ -49,17 +49,42 @@ function stage2() {
     var doorCreated = door(stage.stage2)
     var weaponCreated = weapon(stage.stage2);
     var enemiesAndHealthCreated = enemiesAndHealth(stage.stage2);
-    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, gridOfSecondStage: stage.stage2 };
+    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, grid: stage.stage2 };
 }
 
 function stage3() {
-    var doorCreated = door(stage.stage3)
     var weaponCreated = weapon(stage.stage3);
     var enemiesAndHealthCreated = enemiesAndHealth(stage.stage3);
-    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, gridOfThirdStage: stage.stage3 };
+    return { weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, grid: stage.stage3 };
 }
-
-function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage) {
+function changeStages(stageNum, userLocation) {
+    var userLocation = { x: 6, y: 1, occupied: "player" };
+    var results = {};
+    switch (stageNum) {
+        case 1:
+            results = stage1();
+            break;
+        case 2:
+            results = stage2();
+            break;
+        case 3:
+            results = stage3();
+            break;
+    }
+    return { theResults: results, currentLocation: userLocation };
+}
+function createGrid(pathWays) {
+    var board = grid();
+    for (var i = 0; i < board.length; i++) {
+        for (var z = 0; z < pathWays.length; z++) {
+            if (pathWays[z].x === board[i].x && pathWays[z].y === board[i].y) {
+                board[i] = pathWays[z]
+            }
+        }
+    }
+    return board;
+}
+function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage, stageNum) {
     var board = grid();
     var enemiesImpact = enemies;
     var newLife = userLife;
@@ -124,6 +149,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             board[board.indexOf(findingNewUserLocation)].occupied = "player";
             theOldLocation = board[board.indexOf(findingOldUserLocation)];
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
+            board = "new board"
         }
         else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -133,7 +159,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
     }
-    return { newBoard: board, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon };
+    return { newBoard: board, newStageNum: stageNum, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon };
 
 }
 
@@ -161,10 +187,9 @@ function enemiesAndHealth(stage) {
             }
         }
     }
-
     return { healthSet: health, enemySet: enemies }
 }
 
 module.exports = {
-    grid, movePlayer, weapon, stage1
+    grid, movePlayer, weapon, stage1, stage2, stage3, changeStages, createGrid
 }
