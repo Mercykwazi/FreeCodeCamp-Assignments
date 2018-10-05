@@ -38,6 +38,18 @@ function door(stage) {
     }
 }
 
+function boss(stage) {
+    for (var i = 0; i < 1; i++) {
+        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "boss" }
+        var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
+        while (!findLocation) {
+            findLocation = boss(stage);
+        }
+        findLocation.occupied = "boss";
+        return { ...findLocation }
+    }
+}
+
 function stage1() {
     var doorCreated = door(stage.stage1)
     var weaponCreated = weapon(stage.stage1);
@@ -53,12 +65,20 @@ function stage2() {
 }
 
 function stage3() {
+    var doorCreated = door(stage.stage3)
     var weaponCreated = weapon(stage.stage3);
     var enemiesAndHealthCreated = enemiesAndHealth(stage.stage3);
-    return { weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, grid: stage.stage3 };
+    return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, grid: stage.stage3 };
 }
-function changeStages(stageNum, userLocation) {
-    var userLocation = { x: 6, y: 1, occupied: "player" };
+function stage4() {
+    var weaponCreated = weapon(stage.stage4);
+    var enemiesAndHealthCreated = enemiesAndHealth(stage.stage4);
+    var bossCreated = boss(stage.stage4);
+    return { weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, theBoss: bossCreated, grid: stage.stage4 };
+}
+
+
+function changeStages(stageNum) {
     var results = {};
     switch (stageNum) {
         case 1:
@@ -70,19 +90,27 @@ function changeStages(stageNum, userLocation) {
         case 3:
             results = stage3();
             break;
+        case 4:
+            results = stage4();
+            break;
     }
-    return { theResults: results, currentLocation: userLocation };
+    return results;
 }
 function createGrid(pathWays) {
     var board = grid();
+    var playerLocation = {};
     for (var i = 0; i < board.length; i++) {
         for (var z = 0; z < pathWays.length; z++) {
             if (pathWays[z].x === board[i].x && pathWays[z].y === board[i].y) {
                 board[i] = pathWays[z]
             }
         }
+        if (board[i].x === 6 && board[i].y === 1) {
+            board[i].occupied = 'player';
+            playerLocation = board[i];
+        }
     }
-    return board;
+    return { board: board, playerLoc: playerLocation };
 }
 function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage, stageNum) {
     var board = grid();
@@ -110,6 +138,8 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
         board[board.indexOf(findingNewUserLocation)].occupied = "none";
         theOldLocation = board[board.indexOf(findingOldUserLocation)];
         theNewLocation = board[board.indexOf(findingOldUserLocation)];
+        console.log("which stage does this end?",);
+        
     } else {
         if (findingNewUserLocation.occupied === "Health") {
             newLife = newLife + health
@@ -144,12 +174,18 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theOldLocation = board[board.indexOf(findingOldUserLocation)];
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         } else if (findingNewUserLocation.occupied === "door") {
-            board[board.indexOf(findingOldUserLocation)].occupied = "none";
-            board[board.indexOf(findingOldUserLocation)].display = null;
-            board[board.indexOf(findingNewUserLocation)].occupied = "player";
+            board[board.indexOf(findingOldUserLocation)].occupied = "player";
+            board[board.indexOf(findingNewUserLocation)].occupied = "none";
             theOldLocation = board[board.indexOf(findingOldUserLocation)];
-            theNewLocation = board[board.indexOf(findingNewUserLocation)];
+            theNewLocation = board[board.indexOf(findingOldUserLocation)];
             board = "new board"
+        } else if (findingNewUserLocation.occupied === "boss") {
+            console.log("wooreh you found the boss");
+            board[board.indexOf(findingOldUserLocation)].occupied = "player";
+            board[board.indexOf(findingNewUserLocation)].occupied = "none";
+            theOldLocation = board[board.indexOf(findingOldUserLocation)];
+            theNewLocation = board[board.indexOf(findingOldUserLocation)];
+
         }
         else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -191,5 +227,5 @@ function enemiesAndHealth(stage) {
 }
 
 module.exports = {
-    grid, movePlayer, weapon, stage1, stage2, stage3, changeStages, createGrid
+    grid, movePlayer, weapon, stage1, stage2, stage3, stage4, changeStages, createGrid
 }

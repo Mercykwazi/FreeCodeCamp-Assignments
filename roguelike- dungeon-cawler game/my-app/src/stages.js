@@ -197,6 +197,65 @@ const stage3 = [
     { x: 8, y: 8, pathWay: true, occupied: "none" },
 ];
 
+const stage4 = [
+    { x: 1, y: 1, pathWay: true, occupied: "none" },
+    { x: 1, y: 2, pathWay: true, occupied: "none" },
+    { x: 1, y: 3, pathWay: true, occupied: "none" },
+    { x: 1, y: 4, pathWay: true, occupied: "none" },
+
+    { x: 1, y: 8, pathWay: true, occupied: "none" },
+
+    { x: 2, y: 1, pathWay: true, occupied: "none" },
+    { x: 2, y: 2, pathWay: true, occupied: "none" },
+    { x: 2, y: 6, pathWay: true, occupied: "none" },
+    { x: 2, y: 7, pathWay: true, occupied: "none" },
+    { x: 2, y: 8, pathWay: true, occupied: "none" },
+
+    { x: 3, y: 1, pathWay: true, occupied: "none" },
+    { x: 3, y: 2, pathWay: true, occupied: "none" },
+    { x: 3, y: 4, pathWay: true, occupied: "none" },
+    { x: 3, y: 7, pathWay: true, occupied: "none" },
+    { x: 3, y: 8, pathWay: true, occupied: "none" },
+    { x: 3, y: 10, pathWay: true, occupied: "none" },
+
+    { x: 4, y: 1, pathWay: true, occupied: "none" },
+    { x: 4, y: 2, pathWay: true, occupied: "none" },
+    { x: 4, y: 3, pathWay: true, occupied: "none" },
+    { x: 4, y: 4, pathWay: true, occupied: "none" },
+    { x: 4, y: 5, pathWay: true, occupied: "none" },
+    { x: 4, y: 6, pathWay: true, occupied: "none" },
+    { x: 4, y: 7, pathWay: true, occupied: "none" },
+    { x: 4, y: 8, pathWay: true, occupied: "none" },
+
+    { x: 5, y: 1, pathWay: true, occupied: "none" },
+    { x: 5, y: 2, pathWay: true, occupied: "none" },
+    { x: 5, y: 3, pathWay: true, occupied: "none" },
+    { x: 5, y: 4, pathWay: true, occupied: "none" },
+    { x: 5, y: 6, pathWay: true, occupied: "none" },
+    { x: 5, y: 7, pathWay: true, occupied: "none" },
+    { x: 5, y: 8, pathWay: true, occupied: "none" },
+
+    { x: 6, y: 1, pathWay: true, occupied: "none" },
+    { x: 6, y: 2, pathWay: true, occupied: "none" },
+    { x: 6, y: 7, pathWay: true, occupied: "none" },
+    { x: 6, y: 8, pathWay: true, occupied: "none" },
+    { x: 6, y: 10, pathWay: true, occupied: "none" },
+
+    { x: 7, y: 6, pathWay: true, occupied: "none" },
+    { x: 7, y: 7, pathWay: true, occupied: "none" },
+    { x: 7, y: 8, pathWay: true, occupied: "none" },
+
+    { x: 8, y: 1, pathWay: true, occupied: "none" },
+    { x: 8, y: 2, pathWay: true, occupied: "none" },
+    { x: 8, y: 3, pathWay: true, occupied: "none" },
+    // { x: 8, y: 4, pathWay: true, occupied: "none" },
+    // { x: 8, y: 5, pathWay: true, occupied: "none" },
+    { x: 8, y: 6, pathWay: true, occupied: "none" },
+    { x: 8, y: 7, pathWay: true, occupied: "none" },
+    { x: 8, y: 8, pathWay: true, occupied: "none" },
+];
+
+
 module.exports = {
-    stage1, stage2, stage3
+    stage1, stage2, stage3,stage4
 }
