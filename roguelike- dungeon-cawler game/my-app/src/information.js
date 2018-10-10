@@ -22,7 +22,6 @@ function weapon(stage) {
         }
         findLocation.occupied = "weapon";
         return { ...findLocation }
-
     }
 }
 
@@ -46,7 +45,22 @@ function boss(stage) {
             findLocation = boss(stage);
         }
         findLocation.occupied = "boss";
-        return { ...findLocation }
+
+        var board = grid();
+        var playerLocation = {};
+        for (var i = 0; i < board.length; i++) {
+            for (var z = 0; z < stage.length; z++) {
+                if (stage[z].x === board[i].x && stage[z].y === board[i].y) {
+                    board[i] = stage[z]
+                }
+            }
+            if (board[i].x === 6 && board[i].y === 1) {
+                board[i].occupied = 'player';
+                playerLocation = board[i];
+            }
+        }
+
+        return { findingLocation: findLocation, board: board, playerLoc: playerLocation }
     }
 }
 
@@ -70,6 +84,7 @@ function stage3() {
     var enemiesAndHealthCreated = enemiesAndHealth(stage.stage3);
     return { door: doorCreated, weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, grid: stage.stage3 };
 }
+
 function stage4() {
     var weaponCreated = weapon(stage.stage4);
     var enemiesAndHealthCreated = enemiesAndHealth(stage.stage4);
@@ -118,6 +133,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
     var newLife = userLife;
     var health = 30;
     var enemies = 25
+    var bossLife = 200;
     var currentWeapon = weapons
     var location;
     for (var i = 0; i < board.length; i++) {
@@ -138,8 +154,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
         board[board.indexOf(findingNewUserLocation)].occupied = "none";
         theOldLocation = board[board.indexOf(findingOldUserLocation)];
         theNewLocation = board[board.indexOf(findingOldUserLocation)];
-        console.log("which stage does this end?",);
-        
+
     } else {
         if (findingNewUserLocation.occupied === "Health") {
             newLife = newLife + health
@@ -149,25 +164,23 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theOldLocation = board[board.indexOf(findingOldUserLocation)];
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         } else if (findingNewUserLocation.occupied === "Enemies") {
-            newLife = newLife - enemies;
-            enemiesImpact.life = 40;
-            if (enemiesImpact.life < userLife) {
+            if (enemies < userLife) {
+                newLife = newLife - 5
                 board[board.indexOf(findingOldUserLocation)].occupied = "none";
                 board[board.indexOf(findingOldUserLocation)].display = null;
                 board[board.indexOf(findingNewUserLocation)].occupied = "player";
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
-                enemiesImpact.life = enemiesImpact.life - 20
-            } else if (enemiesImpact.life > userLife) {
-                newLife = userLife - 10;
+            } else if (enemies > userLife) {
                 board[board.indexOf(findingOldUserLocation)].occupied = "player";
                 board[board.indexOf(findingNewUserLocation)].occupied = "none";
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
+                newLife = userLife - 10;
             }
 
         } else if (findingNewUserLocation.occupied === "weapon") {
-            newLife = userLife + 40;
+            newLife = weapons[stageNum - 1].damage + newLife;
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
             board[board.indexOf(findingOldUserLocation)].display = null;
             board[board.indexOf(findingNewUserLocation)].occupied = "player";
@@ -180,12 +193,17 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theNewLocation = board[board.indexOf(findingOldUserLocation)];
             board = "new board"
         } else if (findingNewUserLocation.occupied === "boss") {
-            console.log("wooreh you found the boss");
-            board[board.indexOf(findingOldUserLocation)].occupied = "player";
-            board[board.indexOf(findingNewUserLocation)].occupied = "none";
-            theOldLocation = board[board.indexOf(findingOldUserLocation)];
-            theNewLocation = board[board.indexOf(findingOldUserLocation)];
-
+            if (userLife < bossLife) {
+                alert("sorry you have lost")
+                window.location.reload()
+            } else {
+                board[board.indexOf(findingOldUserLocation)].occupied = "player";
+                board[board.indexOf(findingNewUserLocation)].occupied = "none";
+                theOldLocation = board[board.indexOf(findingOldUserLocation)];
+                theNewLocation = board[board.indexOf(findingOldUserLocation)];
+                alert("Congratulations you have won!")
+                window.location()
+            }
         }
         else {
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
@@ -195,7 +213,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
     }
-    return { newBoard: board, newStageNum: stageNum, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon };
+    return { newBoard: board, newStageNum: stageNum, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon, bossRecord: bossLife };
 
 }
 
@@ -207,7 +225,7 @@ function enemiesAndHealth(stage) {
     var found = "Enemies";
     while (i < 8) {
         var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
-        var position = grid.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
+        var position = grid.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none" && randomValues.x != 6 && randomValues.y != 1);
         found = i <= 3 ? "Enemies" : "Health";
         if (position) {
             if (i <= 3) {
@@ -225,7 +243,23 @@ function enemiesAndHealth(stage) {
     }
     return { healthSet: health, enemySet: enemies }
 }
-
+function createSmallGrid(player, board) {
+    var validSmallGrid = []
+    var x = player.x;
+    var y = player.y;
+    var smallGrid = [player, { x: x - 1, y: y }, { x: x - 1, y: y + 1 }, { x: x, y: y + 1 }, { x: x + 1, y: y + 1 }, { x: x + 1, y: y }, { x: x + 1, y: y - 1 }, { x: x, y: y - 1 }, { x: x - 1, y: y - 1 }];
+    smallGrid.map(e => {
+        e = board.find(element => {
+            return element.x === e.x && element.y === e.y
+        })
+        validSmallGrid.push(e);
+    })
+    var sorted = validSmallGrid.sort(function (a, b) {
+        if (a.x == b.x) return a.y - b.y;
+        return a.x - b.x;
+    })
+    return sorted;
+}
 module.exports = {
-    grid, movePlayer, weapon, stage1, stage2, stage3, stage4, changeStages, createGrid
+    grid, movePlayer, weapon, stage1, stage2, stage3, stage4, changeStages, createGrid, createSmallGrid
 }
