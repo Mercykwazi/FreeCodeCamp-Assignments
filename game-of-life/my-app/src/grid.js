@@ -26,13 +26,17 @@ function getCellAliveNeighbourCount(board) {
             var nearestNeighbor = { cell: board[i], AllNeighbors: neighbors };
             neighborsPerCell.push(nearestNeighbor);
         }
+  //console.log('arr',neighborsPerCell);
+        
         return neighborsPerCell;
     }
 }
 
 function minMax(array) {
+    console.log('array',array);
     var xCoordinates = [];
     var yCoordinates = [];
+    
     array.forEach(element => {
         xCoordinates.push(element.x);
         yCoordinates.push(element.y);
@@ -49,11 +53,12 @@ function minMax(array) {
             toBeCheckedGrid.push(cellIsAlive)
         }
     }
+    console.log('to',toBeCheckedGrid);
+    
     return toBeCheckedGrid
 }
 
 function newGeneration(board) {
-    console.log("bo",board)
     var nextGeneration = [];
     for (var i = 0; i < board.length; i++) {
         var onlyAlive = [];
@@ -92,7 +97,7 @@ function newGeneration(board) {
 // var grid = grid();
 // var makeAlive = liveCells(grid)
 
- newGeneration(minMax(aliveCells))
+// newGeneration(minMax(aliveCells))
 // makeGrid(aliveCells)
 
 

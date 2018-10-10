@@ -17,7 +17,12 @@ h2{
 p {
     font-size: 35px;
 }
-
+.smallGrid{
+     display: grid;
+    justify-content: center;
+    grid-template-columns: 70px 70px 70px ;
+    grid-template-rows: 70px 70px 70px ; 
+}
 .grid {
     display: grid;
     justify-content: center;
