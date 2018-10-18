@@ -1,8 +1,8 @@
 var stage = require('./stages');
 function grid() {
     var wholeGrid = [];
-    for (var x = 0; x < 10; x++) {
-        for (var y = 0; y < 10; y++) {
+    for (var x = 0; x < 15; x++) {
+        for (var y = 0; y < 15; y++) {
             wholeGrid.push({
                 'x': x,
                 'y': y,
@@ -15,7 +15,7 @@ function grid() {
 }
 function weapon(stage) {
     for (var i = 0; i < 1; i++) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "weapon" }
+        var randomValues = { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15), occupied: "weapon" }
         var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
         while (!findLocation) {
             findLocation = weapon(stage);
@@ -27,7 +27,7 @@ function weapon(stage) {
 
 function door(stage) {
     for (var i = 0; i < 1; i++) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "door" }
+        var randomValues = { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15), occupied: "door" }
         var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
         while (!findLocation) {
             findLocation = door(stage);
@@ -39,7 +39,7 @@ function door(stage) {
 
 function boss(stage) {
     for (var i = 0; i < 1; i++) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10), occupied: "boss" }
+        var randomValues = { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15), occupied: "boss" }
         var findLocation = stage.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none");
         while (!findLocation) {
             findLocation = boss(stage);
@@ -91,8 +91,6 @@ function stage4() {
     var bossCreated = boss(stage.stage4);
     return { weapon: weaponCreated, enemiesAndHealth: enemiesAndHealthCreated, theBoss: bossCreated, grid: stage.stage4 };
 }
-
-
 function changeStages(stageNum) {
     var results = {};
     switch (stageNum) {
@@ -127,7 +125,7 @@ function createGrid(pathWays) {
     }
     return { board: board, playerLoc: playerLocation };
 }
-function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage, stageNum) {
+function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, door, stage, stageNum, xp) {
     var board = grid();
     var enemiesImpact = enemies;
     var newLife = userLife;
@@ -136,6 +134,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
     var bossLife = 200;
     var currentWeapon = weapons
     var location;
+    var newXp = xp;
     for (var i = 0; i < board.length; i++) {
         for (var z = 0; z < stage.length; z++) {
             if (stage[z].x === board[i].x && stage[z].y === board[i].y) {
@@ -158,6 +157,8 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
     } else {
         if (findingNewUserLocation.occupied === "Health") {
             newLife = newLife + health
+            newXp = newXp + 2
+
             board[board.indexOf(findingOldUserLocation)].occupied = "none";
             board[board.indexOf(findingOldUserLocation)].display = null;
             board[board.indexOf(findingNewUserLocation)].occupied = "player";
@@ -177,6 +178,10 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
                 newLife = userLife - 10;
+                if (newLife < 0) {
+                    alert('sorry you have lost')
+                    window.location.reload()
+                }
             }
 
         } else if (findingNewUserLocation.occupied === "weapon") {
@@ -202,7 +207,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
                 alert("Congratulations you have won!")
-                window.location()
+                window.location.reload()
             }
         }
         else {
@@ -213,7 +218,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         }
     }
-    return { newBoard: board, newStageNum: stageNum, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon, bossRecord: bossLife };
+    return { newBoard: board, newStageNum: stageNum, oldLocation: theOldLocation, currentLocation: theNewLocation, playerLife: newLife, impactOfEnemies: enemiesImpact, impactOfWeapons: currentWeapon, bossRecord: bossLife, currentXp: newXp };
 
 }
 
@@ -223,12 +228,12 @@ function enemiesAndHealth(stage) {
     var enemies = [];
     var health = [];
     var found = "Enemies";
-    while (i < 8) {
-        var randomValues = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
+    while (i < 12) {
+        var randomValues = { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15) };
         var position = grid.find(element => element.x === randomValues.x && element.y === randomValues.y && element.occupied === "none" && randomValues.x != 6 && randomValues.y != 1);
-        found = i <= 3 ? "Enemies" : "Health";
+        found = i <= 5 ? "Enemies" : "Health";
         if (position) {
-            if (i <= 3) {
+            if (i <= 5) {
                 position.occupied = found;
                 enemies.push(position)
                 found = undefined

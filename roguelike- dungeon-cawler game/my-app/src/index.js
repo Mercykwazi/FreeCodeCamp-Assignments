@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as stages from './stages'
 import * as information from './information';
-import Display from './display';
 
 class Main extends React.Component {
     constructor() {
@@ -14,17 +13,20 @@ class Main extends React.Component {
             oldUserLocation: { x: 6, y: 1 },
             enemies: { life: 25 },
             door: {},
-            AllStages: { stage1: stages.stage1, stage2: stages.stage2, stage3: stages.stage3, stage4: stages.stage4 },
             currentStage: [],
+            xp: [],
             currentStageNum: 1,
             health: [],
             boss: {},
-            weapons: [{ name: 'knive', damage: 15, image: <p> &#9760;</p> }, { name: 'sword', damage: 25, image: <p>&#9876;</p> }, { name: 'Pickaxe', damage: 40, image: <p>&#9935;</p> }, { name: ' pistol', damage: 60, image: <p> &#9755;</p> }],
+            weapons: [{ name: 'knife', damage: 15, image: <span>&#9760;</span> }, { name: 'sword', damage: 25, image: <span>&#9876;</span> }, { name: 'Pickaxe', damage: 40, image: <span>&#9935;</span> }, { name: ' pistol', damage: 60, image: <p> &#9755;</p> }],
             currentWeapon: {},
             currentWeaponNum: 1,
             userLife: { life: 20 },
             smallGrid: [],
-            showOrHideGrid:true
+            xp: 0,
+            bossText: "In order to kill the boss and win the game you must have more than 200 points",
+            showText: false,
+            showOrHideGrid: true
         }
     }
 
@@ -35,14 +37,14 @@ class Main extends React.Component {
         var creatingWeapons = results.weapon;
         var door = results.door;
         var firstStage = results.gridOfFirstStage;
-        var gridSet = information.movePlayer(this.state.oldUserLocation, this.state.userLocation, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, firstStage, this.state.currentStageNum);
+        var gridSet = information.movePlayer(this.state.oldUserLocation, this.state.userLocation, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, firstStage, this.state.currentStageNum, this.state.xp);
         this.setState({
             enemies: enemieAndHealth.enemySet,
             health: enemieAndHealth.healthSet,
             currentWeapon: this.state.weapons[gridSet.newStageNum - 1],
             currentStage: firstStage,
             grid: gridSet.newBoard,
-            currentStageNum: gridSet.newStageNum
+            currentStageNum: gridSet.newStageNum,
         })
     }
 
@@ -59,78 +61,100 @@ class Main extends React.Component {
             keys = { x: keys.x, y: keys.y + 1 }
         }
 
-        var newGridAndLocations = information.movePlayer(old, keys, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, this.state.currentStage, this.state.currentStageNum);
-        var newSmallGridCreated = information.createSmallGrid(keys,newGridAndLocations.newBoard);
+        var newGridAndLocations = information.movePlayer(old, keys, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, this.state.currentStage, this.state.currentStageNum, this.state.xp);
         if (newGridAndLocations.newBoard === "new board") {
-            var innialGrid = this.state.grid;
+            if (this.state.currentStageNum === 3) {
+                this.setState({ showText: true })
+            }
+            var initialGrid = this.state.grid;
             var newGrid = information.changeStages(this.state.currentStageNum + 1);
             var boardCreated = information.createGrid(newGrid.grid);
             var toBeCurrentStage = boardCreated.board.filter(item => {
                 return item.pathWay === true;
             });
-            this.setState({ currentStageNum: this.state.currentStageNum + 1, currentWeapon: this.state.weapons[this.state.currentStageNum], currentStage: toBeCurrentStage, grid: boardCreated.board, userLocation: boardCreated.playerLoc, oldUserLocation: boardCreated.playerLoc, door: newGrid.door, enemies: newGrid.enemiesAndHealth.enemySet, health: newGrid.enemiesAndHealth.healthSet });
+            var newSmallGridCreated = information.createSmallGrid(keys, boardCreated.board);
+            this.setState({ currentStageNum: this.state.currentStageNum + 1, currentWeapon: this.state.weapons[this.state.currentStageNum], currentStage: toBeCurrentStage, grid: boardCreated.board, userLocation: boardCreated.playerLoc, oldUserLocation: boardCreated.playerLoc, door: newGrid.door, enemies: newGrid.enemiesAndHealth.enemySet, health: newGrid.enemiesAndHealth.healthSet, xp: newGridAndLocations.currentXp });
         } else {
-            this.setState({ smallGrid: newSmallGridCreated, currentStageNum: newGridAndLocations.newStageNum, userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: newGridAndLocations.impactOfEnemies, userLife: { life: newGridAndLocations.playerLife }, weapons: newGridAndLocations.impactOfWeapons, door: this.state.door })
+            var newSmallGridCreated = information.createSmallGrid(keys, newGridAndLocations.newBoard);
+            //this.hideGrid();
+            this.setState({ smallGrid: newSmallGridCreated, currentStageNum: newGridAndLocations.newStageNum, userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: newGridAndLocations.impactOfEnemies, userLife: { life: newGridAndLocations.playerLife }, weapons: newGridAndLocations.impactOfWeapons, door: this.state.door, xp: newGridAndLocations.currentXp })
         }
     }
-    hideOrShow() {
-        var innitalGrid=this.state.showOrHideGrid
-        if(!innitalGrid){
-            this.setState({showOrHideGrid:true})
-        }else
-        this.setState({showOrHideGrid: false});
-      }
-    
+    showGrid() {
+        this.setState({ showOrHideGrid: true })
+    }
+    hideGrid() {
+        this.setState({ showOrHideGrid: false });
+    }
+
     render() {
-    
+        if (this.state.currentStageNum === 4) {
+            <p>{this.state.bossText}</p>
+        }
         return (
             <div >
-                <h1> Dangeon Crawler</h1>
-                <h2>XP:{this.state.userLife.life}</h2>
-                <button onClick={()=>this.hideOrShow()}>hideOrShow</button>
+                <h1> Dungeon Crawler</h1>
+                {this.state.showText && (
+                    <p>{this.state.bossText}</p>
+                )}
+                <div class="grid-container">
+                    <div class="grid-item">Stage:{this.state.currentStageNum}</div>
+                    <div class="grid-item">XP:{this.state.xp}</div>
+                    <div class="grid-item">Life:{this.state.userLife.life}</div>
+                    <div class="grid-item">player:{<span> &#9975;</span>}</div>
+                    <div class="grid-item">Health:{<span>&#9749;</span>}</div>
+                    <div class="grid-item">Weapon:{this.state.currentWeapon.image}</div>
+                    <div class="grid-item">Enemies:{<span>&#x263B;</span>}</div>
+
+                    <div class="grid-item">Door:{<span>&#9641;</span>}</div></div>
+
+                <button className='show' onClick={() => this.showGrid()}>ShowGrid</button>
                 {this.state.showOrHideGrid && (
                     <div className="grid">
-                    {this.state.grid.map(e => {
-                        if (e.occupied === "Enemies") {
-                            e.display = <p>&#x263B;</p>
-                        } else if (e.occupied === "Health") {
-                            e.display = <p>&#9749;</p>
-                        } else if (e.occupied === "player") {
-                            e.display = <p>&#9641;</p>;
-                        } else if (e.occupied === "weapon") {
-                            e.display = this.state.currentWeapon.image
-                        } else if (e.occupied === "door") {
-                            e.display = <p>door</p>
-                        } else if (e.occupied === "boss") {
-                            e.display = <p>boss</p>
+                        {this.state.grid.map(e => {
+                            if (e.occupied === "Enemies") {
+                                e.display = <p>&#x263B;</p>
+                            } else if (e.occupied === "Health") {
+                                e.display = <p>&#9749;</p>
+                            } else if (e.occupied === "player") {
+                                e.display = <p> &#9975;</p>;
+                            } else if (e.occupied === "weapon") {
+                                e.display = this.state.currentWeapon.image
+                            } else if (e.occupied === "door") {
+                                e.display = <p>&#9641;</p>
+                            } else if (e.occupied === "boss") {
+                                e.display = <p>boss</p>
+
+                            }
+
+                            return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                         }
-                        
-                        return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
-                    }
-                    )}
-                </div>
+                        )}
+                    </div>
+                )}
+                {this.state.showText && (
+                    <p>{this.state.bossText}</p>
                 )}
                 {!this.state.showOrHideGrid && (
                     <div className="smallGrid">
-                    {this.state.smallGrid.map(e => {
-                        if (e.occupied === "Enemies") {
-                            e.display = <p>&#x263B;</p>
-                        } else if (e.occupied === "Health") {
-                            e.display = <p>&#9749;</p>
-                        } else if (e.occupied === "player") {
-                            e.display = <p>&#9641;</p>;
-                        } else if (e.occupied === "weapon") {
-                            e.display = this.state.currentWeapon.image
-                        } else if (e.occupied === "door") {
-                            e.display = <p>door</p>
-                        } else if (e.occupied === "boss") {
-                            e.display = <p>boss</p>
+                        {this.state.smallGrid.map(e => {
+                            if (e.occupied === "Enemies") {
+                                e.display = <p>&#x263B;</p>
+                            } else if (e.occupied === "Health") {
+                                e.display = <p>&#9749;</p>
+                            } else if (e.occupied === "player") {
+                                e.display = <p> &#9975;</p>;
+                            } else if (e.occupied === "weapon") {
+                                e.display = this.state.currentWeapon.image
+                            } else if (e.occupied === "door") {
+                                e.display = <p>door</p>
+                            } else if (e.occupied === "boss") {
+                                e.display = <p>boss</p>
+                            }
+                            return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
                         }
-                        <h3>yess</h3>
-                        return <button key={this.state.grid.indexOf(e)} id={e.pathWay ? "pathWay" : "notPathway"}>{e.display}</button>
-                    }
-                    )}
-                </div> 
+                        )}
+                    </div>
                 )}
             </div >
         )
