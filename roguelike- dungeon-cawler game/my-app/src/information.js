@@ -166,7 +166,7 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
             theNewLocation = board[board.indexOf(findingNewUserLocation)];
         } else if (findingNewUserLocation.occupied === "Enemies") {
             if (enemies < userLife) {
-                newLife = newLife - 5
+                newLife = newLife - 10
                 board[board.indexOf(findingOldUserLocation)].occupied = "none";
                 board[board.indexOf(findingOldUserLocation)].display = null;
                 board[board.indexOf(findingNewUserLocation)].occupied = "player";
@@ -177,7 +177,10 @@ function movePlayer(oldUserLocation, userLocation, userLife, enemies, weapons, d
                 board[board.indexOf(findingNewUserLocation)].occupied = "none";
                 theOldLocation = board[board.indexOf(findingOldUserLocation)];
                 theNewLocation = board[board.indexOf(findingOldUserLocation)];
-                newLife = userLife - 10;
+                newLife = newLife - 10;
+                enemies=enemies-20;
+                console.log('what',newLife,userLife);
+                
                 if (newLife < 0) {
                     alert('sorry you have lost')
                     window.location.reload()
