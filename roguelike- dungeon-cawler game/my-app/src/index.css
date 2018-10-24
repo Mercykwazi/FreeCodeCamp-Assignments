@@ -62,3 +62,12 @@ p {
 }
 
 .show:hover {background-color: #e7e7e7;}
+.buttons{
+    grid-template-columns: auto auto  ;
+}
+.textStyle{
+font-size: 20px;
+font-style: italic;
+text-align: center;
+
+}
