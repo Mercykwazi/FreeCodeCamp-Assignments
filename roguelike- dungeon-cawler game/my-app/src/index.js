@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import * as stages from './stages'
 import * as information from './information';
 
 class Main extends React.Component {
@@ -14,7 +13,6 @@ class Main extends React.Component {
             enemies: { life: 25 },
             door: {},
             currentStage: [],
-            xp: [],
             currentStageNum: 1,
             health: [],
             boss: {},
@@ -34,8 +32,6 @@ class Main extends React.Component {
         document.onkeydown = this.moveKeys;
         var results = information.stage1()
         var enemieAndHealth = results.enemiesAndHealth;
-        var creatingWeapons = results.weapon;
-        var door = results.door;
         var firstStage = results.gridOfFirstStage;
         var gridSet = information.movePlayer(this.state.oldUserLocation, this.state.userLocation, this.state.userLife.life, this.state.enemies, this.state.weapons, this.state.door, firstStage, this.state.currentStageNum, this.state.xp);
         this.setState({
@@ -66,7 +62,6 @@ class Main extends React.Component {
             if (this.state.currentStageNum === 3) {
                 this.setState({ showText: true })
             }
-            var initialGrid = this.state.grid;
             var newGrid = information.changeStages(this.state.currentStageNum + 1);
             var boardCreated = information.createGrid(newGrid.grid);
             var toBeCurrentStage = boardCreated.board.filter(item => {
@@ -75,8 +70,8 @@ class Main extends React.Component {
             var newSmallGridCreated = information.createSmallGrid(keys, boardCreated.board);
             this.setState({ currentStageNum: this.state.currentStageNum + 1, currentWeapon: this.state.weapons[this.state.currentStageNum], currentStage: toBeCurrentStage, grid: boardCreated.board, userLocation: boardCreated.playerLoc, oldUserLocation: boardCreated.playerLoc, door: newGrid.door, enemies: newGrid.enemiesAndHealth.enemySet, health: newGrid.enemiesAndHealth.healthSet, xp: newGridAndLocations.currentXp });
         } else {
-            var newSmallGridCreated = information.createSmallGrid(keys, newGridAndLocations.newBoard);
-            //this.hideGrid();
+            newSmallGridCreated = information.createSmallGrid(keys, newGridAndLocations.newBoard);
+            this.hideGrid();
             this.setState({ smallGrid: newSmallGridCreated, currentStageNum: newGridAndLocations.newStageNum, userLocation: newGridAndLocations.currentLocation, grid: newGridAndLocations.newBoard, oldUserLocation: newGridAndLocations.oldLocation, enemies: newGridAndLocations.impactOfEnemies, userLife: { life: newGridAndLocations.playerLife }, weapons: newGridAndLocations.impactOfWeapons, door: this.state.door, xp: newGridAndLocations.currentXp })
         }
     }
@@ -86,29 +81,28 @@ class Main extends React.Component {
     hideGrid() {
         this.setState({ showOrHideGrid: false });
     }
+    restartGame() {
+        window.location.reload();
+    }
 
     render() {
-        if (this.state.currentStageNum === 4) {
-            <p>{this.state.bossText}</p>
-        }
         return (
             <div >
                 <h1> Dungeon Crawler</h1>
                 {this.state.showText && (
-                    <p>{this.state.bossText}</p>
+                    <p className="textStyle">{this.state.bossText}</p>
                 )}
-                <div class="grid-container">
-                    <div class="grid-item">Stage:{this.state.currentStageNum}</div>
-                    <div class="grid-item">XP:{this.state.xp}</div>
-                    <div class="grid-item">Life:{this.state.userLife.life}</div>
-                    <div class="grid-item">player:{<span> &#9975;</span>}</div>
-                    <div class="grid-item">Health:{<span>&#9749;</span>}</div>
-                    <div class="grid-item">Weapon:{this.state.currentWeapon.image}</div>
-                    <div class="grid-item">Enemies:{<span>&#x263B;</span>}</div>
-
-                    <div class="grid-item">Door:{<span>&#9641;</span>}</div></div>
-
-                <button className='show' onClick={() => this.showGrid()}>ShowGrid</button>
+                <div className="grid-container">
+                    <div className="grid-item">Stage:{this.state.currentStageNum}</div>
+                    <div className="grid-item">XP:{this.state.xp}</div>
+                    <div className="grid-item">Life:{this.state.userLife.life}</div>
+                    <div className="grid-item">player:{<span> &#9975;</span>}</div>
+                    <div className="grid-item">Health:{<span>&#9749;</span>}</div>
+                    <div className="grid-item">Weapon:{this.state.currentWeapon.image}</div>
+                    <div className="grid-item">Enemies:{<span>&#x263B;</span>}</div>
+                    <div className="grid-item">Door:{<span>&#9641;</span>}</div></div>
+                    <div className="buttons">
+                <button className='show' onClick={() => this.showGrid()}>ShowGrid</button></div>
                 {this.state.showOrHideGrid && (
                     <div className="grid">
                         {this.state.grid.map(e => {
@@ -132,9 +126,7 @@ class Main extends React.Component {
                         )}
                     </div>
                 )}
-                {this.state.showText && (
-                    <p>{this.state.bossText}</p>
-                )}
+              
                 {!this.state.showOrHideGrid && (
                     <div className="smallGrid">
                         {this.state.smallGrid.map(e => {
