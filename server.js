@@ -17,31 +17,17 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
-const isDateString = date => {
-  let curentDate;
-  if (date) {
-    curentDate = new Date();
-  } else if (date === undefined) {
-    curentDate = new Date();
-  } else {
-    curentDate = new Date();
-  }
-  if (curentDate.getTime() === NaN || curentDate.toUTCString() === "Invalid Date") {
-    return {"unix": null, "utc" : "Invalid Date" };
-  } 
-  else {
-    return { unix: curentDate.getTime(), utc: curentDate.toUTCString() };
-  }
-}
-// your first API endpoint... 
-// app.get("/api/hello", function (req, res) {
-//   res.json({greeting: 'hello API'});
-// });
-app.get('/api/timestamp/:date_string?', (req, res) => {
- var results= res.json(isDateString(req.params.date_string));
-  console.log('res',results)
-})
 
+
+// your first API endpoint... 
+app.get("/api/hello", function (req, res) {
+  
+  var ipAddress = req.connection.remoteAddress;
+  var language =req.headers['accept-language'];
+  var browser=req.headers['user-agent'];
+  console.log('browser',browser)
+  res.json({"ipaddress": ipAddress,"language":language,"software":browser});
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
