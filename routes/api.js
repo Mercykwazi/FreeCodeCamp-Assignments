@@ -2,159 +2,133 @@
 *
 *
 *       Complete the API routing below
-*       
-*       
+*
+*
 */
 
 'use strict';
 
-var expect = require('chai').expect;
-var expect = require('chai').expect;
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectId;
-const MONGODB_CONNECTION_STRING = process.env.DB;
-//Example connection: MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {});
+var expect     = require('chai').expect;
+var StockHandler = require('../controllers/stockHandler.js');
 
-module.exports = function (app) {
 
-  app.route('/api/books')
+
+module.exports = function (app,db) {
+  
+  var stockHandler = new StockHandler();
+  
+  app.route('/api/stock-prices')
     .get(function (req, res){
-      //response will be array of book objects
-      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
-    
-      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-        if (err) res.json({"message": "db connection error", "error": err});
-  
-        var query = {};
-        db.collection("personallibrary_books").find(query, {_id: 1, title: 1, comments: 1}).toArray(function(err, doc) {
-          if (err) res.json({"message": "Error occurred while finding", "error": err});
-          if(doc !== null && doc !== undefined && doc.length > 0){
-            for(var i=0;i<doc.length;i++) {
-              doc[i].commentcount = doc[i].comments.length;
-              delete doc[i].comments;
-            }
-            res.json(doc);
-          }else{
-            res.json({"message": "no book exists"});
-          }
-          db.close();
-        });
-                      
-      });
-    })
-    
-    .post(function (req, res){
-      var title = req.body.title;
-      //response will contain new book object including atleast _id and title
-    
-      if(!title){
-        res.json({"error": "title is empty!"});
-      }else{
-        MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-          if (err) res.json({"message": "db connection error", "error": err});
-
-          var query = { title: title, comments: [] };
-          db.collection("personallibrary_books").insertOne(query, function(err, doc) {
-            if (err) res.json({"message": "Error occurred while inserting", "error": err});
-            res.json(doc.ops[0]);
-            db.close();
-          });
-
-        });
+      let stock = req.query.stock;
+      let like  = req.query.like || false;
+      let ip    = req.ip
+      
+      
+      // Convert single stock to uppercase
+      
+      if(!Array.isArray(stock)){
+        stock = (req.query.stock).toUpperCase();
       }
-    })
     
-    .delete(function(req, res){
-      //if successful response will be 'complete delete successful'
+      // check liked stock. if already added return if not add like and return. 
     
-      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-        if (err) res.json({"message": "db connection error", "error": err});
-  
-        var query = {};
-        db.collection("personallibrary_books").deleteMany(query, function(err, doc) {
-          if (err) res.json({"message": "Error occurred while deleting", "error": err});
-          console.log(doc);
-          res.json({"message": "complete delete successful"});
-          db.close();
-        });
-        
-      });
-    });
-
-
-
-  app.route('/api/books/:id')
-    .get(function (req, res){
-      var bookid = req.params.id;
-      //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
-      
-      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-        if (err) res.json({"message": "db connection error", "error": err});
-  
-        var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
-        db.collection("personallibrary_books").findOne(query, function(err, doc) {
-          if (err) res.json({"message": "Error occurred while finding", "error": err});
-          
-          if(doc !== null && doc !== undefined){
-            //console.log(doc);
-            res.json(doc);
-          }else{
-            res.json({"message": "could not found", "_id": bookid});
-          }
-          
-          db.close();
-        });
-        
-      });
-      
-    })
-    
-    .post(function(req, res){
-      var bookid = req.params.id;
-      var comment = req.body.comment;
-      //json res format same as .get
-      
-      if(!comment){
-        res.json({"error": "comment is empty!"});
-      }else{
-        MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-          if (err) res.json({"message": "db connection error", "error": err});
-
-          var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
-          //var query = {"_id" : new ObjectId(bookid)};
-          db.collection("personallibrary_books").findOneAndUpdate(query, { $push: {comments: comment } }, function(err, doc) {
-            if (err) res.json({"message": "Error occurred while finding", "error": err});
-
-            if(doc !== null && doc !== undefined){
-              doc.value.comments.push(comment);
-              console.log(doc.value);
-              res.json(doc.value);
-            }else{
-              res.json({"message": "could not found or update", "_id": bookid});
+      async function findAndUpdate(stock){
+        let obj = await stockHandler.stockObj(stock,db,ip);
+        if(obj.likes === 1){
+          return obj;
+        }
+        if(obj.likes === 0){
+          stockHandler.saveLike(obj.stock,db,ip).then((data) => {
+            if(data.insertedCount === 1){
+              obj.likes = 1;
+              return obj;
             }
-
-            db.close();
           });
-
-        });
+        }
       }
-    })
     
-    .delete(function(req, res){
-      var bookid = req.params.id;
-      //if successful response will be 'delete successful'
-      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
-        if (err) res.json({"message": "db connection error", "error": err});
-  
-        var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
-        db.collection("personallibrary_books").deleteOne(query, function(err, doc) {
-          if (err) res.json({"message": "Error occurred while deleting", "error": err});
-          console.log(doc);
-          res.json({"message": "delete successful", "_id": bookid});
-          db.close();
-        });
+      // if one stock and no likes 
+    
+      if(!Array.isArray(stock) && !like){
+        stockHandler.stockObj(stock,db,ip).then((stkObj) => {
+          res.json({stockData: stkObj})
+        }).catch(err => console.log(err));
+      }
+    
+    // if one stock and like
+    
+    if(!Array.isArray(stock) && like){
+      findAndUpdate(stock).then((stkObj) => {
+        if(stkObj){
+          res.json({stockData: stkObj})
+        }
+      }).catch(err => console.log(err));
+    }
+    
+    // if two stocks and no like 
+    
+    if(Array.isArray(stock) && !like){
+      let firstStock = stock[0].toUpperCase();
+      let lastStock = stock[1].toUpperCase();
+      
+      stockHandler.stockObj(firstStock,db,ip).then((stkObj1,err) => {
+        if(stkObj1){
+          let obj1 = stkObj1;
+          stockHandler.stockObj(lastStock,db,ip).then((stkObj2, err) => {
+            if(stkObj2){
+              let obj2 = stkObj2;
+              let stockData = [
+                {
+                  stock: obj1.stock,
+                  price: obj1.price,
+                  rel_likes: stockHandler.relLikes(obj1, obj2)
+                },
+                {
+                  stock: obj2.stock,
+                  price: obj2.price,
+                  rel_likes: stockHandler.relLikes(obj2, obj1)
+                }
+              ]
+              
+              res.json({stockData});
+            }
+          })
+        }
+      })
+      
+    }
+    
+    // if two stocks and like
+    
+    if(Array.isArray(stock) && like){
+      let firstStock = stock[0].toUpperCase();
+      let lastStock = stock[1].toUpperCase();
+      findAndUpdate(firstStock).then((obj1) => {
+        if(obj1){
+          findAndUpdate(lastStock).then((obj2) => {
+            if(obj2){
+              let stockData = [
+                {
+                  stock: obj1.stock,
+                  price: obj1.price,
+                  rel_likes: stockHandler.relLikes(obj1, obj2)
+                },
+                {
+                  stock: obj2.stock,
+                  price: obj2.price,
+                  rel_likes: stockHandler.relLikes(obj2, obj1)
+                }
+              ]
+              
+              res.json({stockData});
+            }
+          })
+        }
         
-      });
+      })
+      
+    }
+      
     });
-  
+    
 };
