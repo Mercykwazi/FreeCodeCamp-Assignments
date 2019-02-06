@@ -3,226 +3,162 @@
 *
 *       FILL IN EACH FUNCTIONAL TEST BELOW COMPLETELY
 *       -----[Keep the tests in the same order!]-----
-*       (if additional are added, keep them at the very end!)
+*       
 */
+var chaiHttp = require('chai-http');
+var chai = require('chai');
+var assert = chai.assert;
+var server = require('../server');
 
+chai.use(chaiHttp);
 
-const chai      = require( 'chai' );
-const expect    = chai.expect;
+suite('Functional Tests', function() {
 
-const server    = require( '../server' );
-
-chai.use( chaiHttp );
-
-suite( 'Functional Tests', ( ) => {
-
-    let firstInsertedID; // Used to store the first inserted ID and use it later in the PUT tests.
-  
-    suite( 'POST /api/issues/{project} => object with issue data', ( ) => {
-      
-      test( 'Every field filled in', ( done ) => {
-        chai.request( server )
-          .post( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( {
-            issue_title : 'Every field filled in',
-            issue_text  : 'Text',
-            created_by  : 'Created by',
-            assigned_to : 'Assigned to',
-            status_text : 'Filter me'
-          } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.body   ).to.have.property( '_id'         );
-            expect( res.body   ).to.have.property( 'issue_title' ).to.equal( 'Every field filled in' );
-            expect( res.body   ).to.have.property( 'issue_text'  ).to.equal( 'Text' );
-            expect( res.body   ).to.have.property( 'created_by'  ).to.equal( 'Created by' );
-            expect( res.body   ).to.have.property( 'assigned_to' ).to.equal( 'Assigned to' );
-            expect( res.body   ).to.have.property( 'status_text' ).to.equal( 'Filter me' );
-            expect( res.body   ).to.have.property( 'open'        ).to.be.a( 'boolean' ).and.to.equal( true );
-            // ID to be used later in the PUT tests.
-            firstInsertedID = res.body._id;
-            done( );
-          } );
-      } );
-
-      test( 'Required fields filled in', ( done ) => {
-        chai.request( server )
-          .post( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( {
-            issue_title : 'Required fields filled in',
-            issue_text  : 'Text',
-            created_by  : 'Created by',
-          } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.body   ).to.have.property( '_id'         );
-            expect( res.body   ).to.have.property( 'issue_title' ).to.equal( 'Required fields filled in' );
-            expect( res.body   ).to.have.property( 'issue_text'  ).to.equal( 'Text' );
-            expect( res.body   ).to.have.property( 'created_by'  ).to.equal( 'Created by' );
-            expect( res.body   ).to.have.property( 'assigned_to' ).to.equal( '' );
-            expect( res.body   ).to.have.property( 'status_text' ).to.equal( '' );
-            expect( res.body   ).to.have.property( 'open'        ).to.be.a( 'boolean' ).and.to.equal( true );
-            expect( res.body   ).to.have.property( 'created_on'  );
-            expect( res.body   ).to.have.property( 'updated_on'  );
-            done( );
-          } );
-      } );
-
-      test( 'Missing required fields', ( done ) => {
-        chai.request( server )
-          .post( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( {
-            issue_title : 'Missing required fields',
-            issue_text  : 'Property "assigned_to" was not filled',
-          } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.text )
-              .to.equal( 'Sorry, but "issue_title", "issue_text" and "created_by" are all required' );
-            done( );
-          } );
-      } );
-
-    });
-
-    suite( 'PUT /api/issues/{project} => text', ( ) => {
-      
-      test( 'No body', ( done ) => {
-        chai.request( server )
-          .put( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( { _id : firstInsertedID } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.text ).to.equal( 'no updated field sent' );
-            done( );
-          } );
-      } );
-
-      test( 'One field to update', ( done ) => {
-        chai.request( server )
-          .put( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( {_id: firstInsertedID, issue_title: 'One field to update'} )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.text ).to.equal( 'successfully updated' );
-            done( );
-          } );
-      } );
-
-      test( 'Multiple fields to update', ( done ) => {
-        chai.request( server )
-          .put( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( {
-            _id         : firstInsertedID,
-            issue_title : 'Multiple fields to update',
-            issue_text  : 'Another field updated'
-          } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.text ).to.equal( 'successfully updated' );
-            done( );
-          } );
-      } );
-
-    });
-
-    suite( 'GET /api/issues/{project} => Array of objects with issue data', ( ) => {
-      
-      test( 'No filter', ( done ) => {
-        chai.request( server )
-          .get( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .query( { } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.body ).is.a( 'array' );
-            expect( res.body[0] ).to.have.property( '_id'         );
-            expect( res.body[0] ).to.have.property( 'issue_title' );
-            expect( res.body[0] ).to.have.property( 'issue_text'  );
-            expect( res.body[0] ).to.have.property( 'assigned_to' );
-            expect( res.body[0] ).to.have.property( 'status_text' );
-            expect( res.body[0] ).to.have.property( 'created_by'  );
-            expect( res.body[0] ).to.have.property( 'created_on'  );
-            expect( res.body[0] ).to.have.property( 'updated_on'  );
-            expect( res.body[0] ).to.have.property( 'open'        );
-            done( );
-          } );
+  /*
+  * ----[EXAMPLE TEST]----
+  * Each test should completely test the response of the API end-point including response status code!
+  */
+  test('#example Test GET /api/books', function(done){
+     chai.request(server)
+      .get('/api/books')
+      .end(function(err, res){
+        assert.equal(res.status, 200);
+        assert.isArray(res.body, 'response should be an array');
+        assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
+        assert.property(res.body[0], 'title', 'Books in array should contain title');
+        assert.property(res.body[0], '_id', 'Books in array should contain _id');
+        done();
       });
+  });
+  /*
+  * ----[END of EXAMPLE TEST]----
+  */
 
-      test( 'One filter', ( done ) => {
-        chai.request( server )
-          .get( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .query( { status_text: 'Filter me' } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.body ).is.a( 'array' );
-            expect( res.body[0] ).to.have.property( 'status_text' ).to.equal( 'Filter me' );
-            expect( res.body[0] ).to.have.property( '_id'         );
-            expect( res.body[0] ).to.have.property( 'issue_title' );
-            expect( res.body[0] ).to.have.property( 'issue_text'  );
-            expect( res.body[0] ).to.have.property( 'assigned_to' );
-            expect( res.body[0] ).to.have.property( 'created_by'  );
-            expect( res.body[0] ).to.have.property( 'created_on'  );
-            expect( res.body[0] ).to.have.property( 'updated_on'  );
-            expect( res.body[0] ).to.have.property( 'open'        );
-            done( );
-          } );
-      } );
+  suite('Routing tests', function() {
 
-      test( 'Multiple filters (test for multiple fields you know will be in the db for a return)', ( done ) => {
-        chai.request( server )
-          .get( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .query( { issue_title: 'Multiple fields to update', status_text: 'Filter me'  } )
-          .end( ( err,res ) => {
-            expect( res.status ).to.equal( 200 );
-            expect( res.body ).is.a( 'array' );
-            expect( res.body[0] ).to.have.property( '_id'         );
-            expect( res.body[0] ).to.have.property( 'issue_title' ).to.equal( 'Multiple fields to update' );
-            expect( res.body[0] ).to.have.property( 'issue_text'  ).to.equal( 'Another field updated' );
-            expect( res.body[0] ).to.have.property( 'assigned_to' ).to.equal( 'Assigned to' );
-            expect( res.body[0] ).to.have.property( 'status_text' ).to.equal( 'Filter me' );
-            expect( res.body[0] ).to.have.property( 'created_by'  ).to.equal( 'Created by' );
-            expect( res.body[0] ).to.have.property( 'created_on'  );
-            expect( res.body[0] ).to.have.property( 'updated_on'  );
-            expect( res.body[0] ).to.have.property( 'open'        ).to.equal( true );
-            done( );
-          } );
+    var testid;
+    
+    suite('POST /api/books with title => create book object/expect book object', function() {
+      
+      test('Test POST /api/books with title', function(done) {
+       chai.request(server)
+        .post('/api/books')
+        .send({
+          title: 'Title'
+        })
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          assert.property(res.body, '_id');
+          assert.property(res.body, 'title');
+          assert.property(res.body, 'comments');
+          assert.equal(res.body.title, 'Title');
+          assert.isArray(res.body.comments);
+          //assert.isEmpty(res.body.comments);
+          assert.lengthOf(res.body.comments, 0);
+          done();
+        });
       });
-
+      
+      test('Test POST /api/books with no title given', function(done) {
+       chai.request(server)
+        .post('/api/books')
+        .send({})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          assert.property(res.body, 'error');
+          assert.equal(res.body.error, 'title is empty!');
+          done();
+        });
+      });
+      
     });
 
-    suite( 'DELETE /api/issues/{project} => text', ( ) => {
+
+    suite('GET /api/books => array of books', function(){
       
-      test( 'No _id', ( done ) => {
-        chai.request( server )
-          .delete( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( { } )
-          .end( ( err,res ) => {
-            expect( res.text ).to.equal( '_id error' );
-            done( );
-          } );
-      } );
+      test('Test GET /api/books',  function(done){
+         chai.request(server)
+          .get('/api/books')
+          .end(function(err, res){
+            assert.equal(res.status, 200);
+            assert.isArray(res.body, 'response should be an array');
+            assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
+            assert.property(res.body[0], 'title', 'Books in array should contain title');
+            assert.property(res.body[0], '_id', 'Books in array should contain _id');
+            testid = res.body[0]._id;
+            done();
+          });
+      });      
+      
+    });
 
-      test( 'Valid _id', ( done ) => {
-        chai.request( server )
-          .delete( '/api/issues/test' )
-          .set( 'content-type', 'application/x-www-form-urlencoded' )
-          .send( { _id: firstInsertedID } )
-          .end( ( err,res ) => {
-            expect( res.text ).to.equal( `deleted ${ firstInsertedID }` );
-            done( );
-          } );
-      } );
+    suite('GET /api/books/[id] => book object with [id]', function(){
+      
+      test('Test GET /api/books/[id] with id not in db',  function(done){
+       chai.request(server)
+        .get('/api/books/256100384782055')
+        .send({})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          assert.property(res.body, 'message');
+          assert.property(res.body, '_id');
+          assert.equal(res.body.message, 'could not found');
+          assert.equal(res.body._id, '256100384782055');
+          done();
+        });
+      });
+      
+      test('Test GET /api/books/[id] with valid id in db',  function(done){
+       chai.request(server)
+        .get('/api/books/'+testid)
+        .send({})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          assert.property(res.body, '_id');
+          assert.property(res.body, 'title');
+          assert.property(res.body, 'comments');
+          assert.equal(res.body._id, testid);
+          assert.equal(res.body.title, 'Title');
+          assert.isArray(res.body.comments);
+          done();
+        });
+      });
+      
+    });
 
-    } );
+    suite('POST /api/books/[id] => add comment/expect book object with id', function(){
+      
+      test('Test POST /api/books/[id] with comment', function(done){
+       chai.request(server)
+        .post('/api/books/'+testid)
+        .send({
+           comment: 'this is comment'
+         })
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          assert.property(res.body, '_id');
+          assert.property(res.body, 'title');
+          assert.property(res.body, 'comments');
+          assert.equal(res.body._id, testid);
+          assert.equal(res.body.title, 'Title');
+          assert.isArray(res.body.comments);
+          assert.include(res.body.comments, 'this is comment', 'comments contains "this is comment" value');
+          done();
+        });
+      });
+      
+    });
+
+  });
 
 });
+
+    suite('POST /api/books/[id] => add comment/expect book object with id', function(){
+      
+      test('Test POST /api/books/[id] with comment', function(done){
+        //done();
+      });
+      
+    });
+
+

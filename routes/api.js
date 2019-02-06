@@ -1,122 +1,160 @@
-const MongoClient = require( 'mongodb' );
-const ObjectId    = require( 'mongodb' ).ObjectID;
-const xssFilters  = require( 'xss-filters' );
+/*
+*
+*
+*       Complete the API routing below
+*       
+*       
+*/
 
-const DB_URI   = process.env.DB;
-const ENDPOINT = '/api/issues/:project';
+'use strict';
 
-module.exports = ( app ) => {
+var expect = require('chai').expect;
+var expect = require('chai').expect;
+var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
+const MONGODB_CONNECTION_STRING = process.env.DB;
+//Example connection: MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {});
 
-  app.get( ENDPOINT, ( req,res ) => {
-    const project = req.params.project;
-    const query   = req.query;
-    if ( query._id )   query._id  = new ObjectId( query._id );
-    if ( query.open === '' || query.open === 'true' )  query.open = true;
-    else if ( query.open === 'false' )                 query.open = false;
+module.exports = function (app) {
 
-    MongoClient.connect( DB_URI )
-      .then( db => {
-        const collection = db.collection( project );
-        collection.find( query ).sort( { updated_on: -1 } ).toArray( ( error,doc ) => {
-          if ( !error ) res.json( doc );
-          else          res.send( error );
-        } );
-
-      } )
-      .catch( error => {
-        res.send( error ) 
-      } );
-  } )
-
-  app.post( ENDPOINT, ( req,res ) => {
-    const newIssue = {
-      issue_title   : req.body.issue_title,
-      issue_text    : req.body.issue_text,
-      assigned_to   : req.body.assigned_to || '',
-      status_text   : req.body.status_text || '',
-      created_by    : req.body.created_by,
-      open          : true
-    };
-    const project = xssFilters.inHTMLData( req.params.project );
-
-    // Sanitize input data.
-    for ( let input in newIssue ) {
-      if ( input !== 'open' ) {
-        newIssue[ input ] = xssFilters.inHTMLData( newIssue[ input ] );
-        if ( newIssue[ input ] === 'undefined' ) newIssue[ input ] = undefined;
-      }
-    }
-    newIssue.created_on = Date.now( );
-    newIssue.updated_on = Date.now( );
-
-    if ( newIssue.issue_title && newIssue.issue_text && newIssue.created_by ) {
-      MongoClient.connect( DB_URI )
-        .then( db => {
-          const collection = db.collection( project );
-          collection.insertOne( newIssue )
-            .then( doc => {
-              newIssue._id = doc.insertedId;
-              res.json( newIssue );
-            } )
-            .catch( error => res.send( error ) );
-        } )
-        .catch( error => res.send( error ) );
-    } else {
-      res.send( 'Sorry, but "issue_title", "issue_text" and "created_by" are all required' );
-    }
-  } );
-
-  app.put( ENDPOINT, ( req,res ) => {
-    const project     = xssFilters.inHTMLData( req.params.project );
-    const inputs      = req.body;
-    const issueID     = xssFilters.inHTMLData( inputs._id );
-
-    delete inputs._id;            // Delete from object to check if all other inputs are empty.
-    for ( let input in inputs ) { // Delete all empty properties and sanitize.
-      if ( !inputs[ input ] && input !== 'open' )
-        delete inputs[ input ];
-      else
-        inputs[ input ] = xssFilters.inHTMLData( inputs[ input ] );
-    }
-
-    if ( Object.keys( inputs ).length > 0 ) {
-      // Assigned here just to meet the user stories.
-      // If assigned before, an empty form could be sent.
-      inputs.open       = !inputs.open;
-      inputs.updated_on = Date.now( );
-
-      MongoClient.connect( DB_URI ) // Connect to DB and update document.
-        .then( db => {
-          const collection = db.collection( project );
-          collection.findAndModify(
-            { _id: new ObjectId( issueID ) },
-            [ [ '_id',1 ] ],
-            { $set: inputs },
-            { new: true } )  // Returns the updated collection.
-              .then( doc => res.send( 'successfully updated' ) )
-              .catch( error => res.send( error ) )
-        } )
-        .catch( error => res.send( error ) );
-    } else {
-      res.send( 'no updated field sent' );
-    }
-  } );
+  app.route('/api/books')
+    .get(function (req, res){
+      //response will be array of book objects
+      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     
-  app.delete( ENDPOINT, ( req,res ) => {
-    const project = req.params.project;
-    const issueID = req.body._id;
+      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+        if (err) res.json({"message": "db connection error", "error": err});
+  
+        var query = {};
+        db.collection("personallibrary_books").find(query, {_id: 1, title: 1, comments: 1}).toArray(function(err, doc) {
+          if (err) res.json({"message": "Error occurred while finding", "error": err});
+          if(doc !== null && doc !== undefined && doc.length > 0){
+            for(var i=0;i<doc.length;i++) {
+              doc[i].commentcount = doc[i].comments.length;
+              delete doc[i].comments;
+            }
+            res.json(doc);
+          }else{
+            res.json({"message": "no book exists"});
+          }
+          db.close();
+        });
+                      
+      });
+    })
+    
+    .post(function (req, res){
+      var title = req.body.title;
+      //response will contain new book object including atleast _id and title
+    
+      if(!title){
+        res.json({"error": "title is empty!"});
+      }else{
+        MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+          if (err) res.json({"message": "db connection error", "error": err});
 
-    if ( issueID ) {
-      MongoClient.connect( DB_URI )
-        .then( db => {
-          const collection = db.collection( project );
-          collection.findOneAndDelete( { _id: new ObjectId( issueID ) } )
-            .then( doc => res.send( `deleted ${issueID}` ) )
-            .catch( error => res.send ( `could not delete ${issueID}` ) )
-        } )
-    } else {
-      res.send( '_id error' );
-    }
-  } );
+          var query = { title: title, comments: [] };
+          db.collection("personallibrary_books").insertOne(query, function(err, doc) {
+            if (err) res.json({"message": "Error occurred while inserting", "error": err});
+            res.json(doc.ops[0]);
+            db.close();
+          });
 
+        });
+      }
+    })
+    
+    .delete(function(req, res){
+      //if successful response will be 'complete delete successful'
+    
+      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+        if (err) res.json({"message": "db connection error", "error": err});
+  
+        var query = {};
+        db.collection("personallibrary_books").deleteMany(query, function(err, doc) {
+          if (err) res.json({"message": "Error occurred while deleting", "error": err});
+          console.log(doc);
+          res.json({"message": "complete delete successful"});
+          db.close();
+        });
+        
+      });
+    });
+
+
+
+  app.route('/api/books/:id')
+    .get(function (req, res){
+      var bookid = req.params.id;
+      //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      
+      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+        if (err) res.json({"message": "db connection error", "error": err});
+  
+        var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
+        db.collection("personallibrary_books").findOne(query, function(err, doc) {
+          if (err) res.json({"message": "Error occurred while finding", "error": err});
+          
+          if(doc !== null && doc !== undefined){
+            //console.log(doc);
+            res.json(doc);
+          }else{
+            res.json({"message": "could not found", "_id": bookid});
+          }
+          
+          db.close();
+        });
+        
+      });
+      
+    })
+    
+    .post(function(req, res){
+      var bookid = req.params.id;
+      var comment = req.body.comment;
+      //json res format same as .get
+      
+      if(!comment){
+        res.json({"error": "comment is empty!"});
+      }else{
+        MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+          if (err) res.json({"message": "db connection error", "error": err});
+
+          var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
+          //var query = {"_id" : new ObjectId(bookid)};
+          db.collection("personallibrary_books").findOneAndUpdate(query, { $push: {comments: comment } }, function(err, doc) {
+            if (err) res.json({"message": "Error occurred while finding", "error": err});
+
+            if(doc !== null && doc !== undefined){
+              doc.value.comments.push(comment);
+              console.log(doc.value);
+              res.json(doc.value);
+            }else{
+              res.json({"message": "could not found or update", "_id": bookid});
+            }
+
+            db.close();
+          });
+
+        });
+      }
+    })
+    
+    .delete(function(req, res){
+      var bookid = req.params.id;
+      //if successful response will be 'delete successful'
+      MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {
+        if (err) res.json({"message": "db connection error", "error": err});
+  
+        var query = {"_id" : bookid.length === 24 ? ObjectId(bookid) : bookid };
+        db.collection("personallibrary_books").deleteOne(query, function(err, doc) {
+          if (err) res.json({"message": "Error occurred while deleting", "error": err});
+          console.log(doc);
+          res.json({"message": "delete successful", "_id": bookid});
+          db.close();
+        });
+        
+      });
+    });
+  
 };

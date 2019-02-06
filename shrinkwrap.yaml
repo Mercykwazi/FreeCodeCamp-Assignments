@@ -7,7 +7,6 @@ dependencies:
   helmet: 3.15.0
   mocha: 3.5.3
   mongodb: 2.2.36
-  xss-filters: 1.2.7
   zombie: 5.0.8
 packages:
   /abab/1.0.4:
@@ -250,13 +249,13 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
-  /cssom/0.3.4:
+  /cssom/0.3.6:
     dev: false
     resolution:
-      integrity: sha512-+7prCSORpXNeR4/fUP3rL+TzqtiFfhMvTd7uEqMdgPvLPt4+uzFUeufx5RHjGTACCargg/DiEt/moMQmvnfkog==
+      integrity: sha512-DtUeseGk9/GBW0hl0vVPpU22iHL6YB5BUX7ml1hB+GMpo0NX5G4voX3kdWiMSEguFtcW3Vh3djqNF4aIe6ne0A==
   /cssstyle/0.2.37:
     dependencies:
-      cssom: 0.3.4
+      cssom: 0.3.6
     dev: false
     resolution:
       integrity: sha1-VBCXI0yyUTyDzu06zdwn/yeYfVQ=
@@ -730,7 +729,7 @@ packages:
       abab: 1.0.4
       acorn: 2.7.0
       acorn-globals: 1.0.9
-      cssom: 0.3.4
+      cssom: 0.3.6
       cssstyle: 0.2.37
       escodegen: 1.11.0
       nwmatcher: 1.4.4
@@ -1443,10 +1442,6 @@ packages:
     dev: false
     resolution:
       integrity: sha1-TYuPHszTQZqjYgYb7O9RXh5VljU=
-  /xss-filters/1.2.7:
-    dev: false
-    resolution:
-      integrity: sha1-Wfod4gHzby80cNysX1jMwoMLCpo=
   /zombie/5.0.8:
     dependencies:
       babel-runtime: 5.8.29
@@ -1478,5 +1473,4 @@ specifiers:
   helmet: ^3.1.0
   mocha: ^3.2.0
   mongodb: ^2.2.16
-  xss-filters: ^1.2.7
   zombie: ^5.0.5
